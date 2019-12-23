@@ -1,0 +1,61 @@
+{
+  "name": "@blockchyp/blockchyp-tokenizer",
+  "version": "0.1.0",
+  "description": "BlockChyp Tokenizer",
+  "main": "tokenizer.js",
+  "scripts": {
+    "build": "./node_modules/.bin/eslint src/* && babel src -d dist",
+    "prod": "npm run build && browserify dist/global.js -o dist/blockchyp-tokenizer-all.js && uglifyjs dist/blockchyp-tokenizer-all.js -o dist/blockchyp-tokenizer-all.min.js",
+    "test": "babel src -d dist && jasmine",
+    "dev": "./node_modules/.bin/http-server . -p 9000 -c-1",
+    "prepare": "npm run prod"
+  },
+  "files": [
+    "src/",
+    "spec/",
+    "itest/",
+    "dist/",
+    ".babelrc",
+    ".eslintrc.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blockchyp/blockchyp-tokenizer.git"
+  },
+  "keywords": [
+    "es6",
+    "payments",
+    "blockchain"
+  ],
+  "author": "jeffreydpayne",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blockchyp/blockchyp-tokenizer/issues"
+  },
+  "homepage": "https://github.com/blockchyp/blockchyp-tokenizer#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-latest": "^6.24.1",
+    "browserify": "^16.2.2",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "fs": "0.0.1-security",
+    "jasmine": "^3.1.0",
+    "jasmine-promises": "^0.4.1",
+    "uglify-js": "^3.4.2",
+    "http-server": "^0.12.0"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "cached-path-relative": "^1.0.2",
+    "moment": "^2.22.2",
+    "npm": "^6.10.1",
+    "axios": "^0.19.0"
+  }
+}

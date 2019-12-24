@@ -7,6 +7,7 @@ class BlockChypTokenizer {
     this.testGatewayHost = 'https://test.blockchyp.com'
     this.defaultTimeout = 60
     this.inputDiv = null
+    this.valid = false
   }
 
   setGatewayHost (host) {
@@ -25,7 +26,12 @@ class BlockChypTokenizer {
     return config
   }
 
+  isValid () {
+    return this.valid
+  }
+
   render (tokenizingKey, test, divId, options) {
+    let self = this
     this.inputDiv = divId
     var inputDiv = document.getElementById(divId)
     inputDiv.setAttribute('style', 'margin: 0; padding: 0;')
@@ -62,8 +68,10 @@ class BlockChypTokenizer {
           case 'validate':
             var inputDiv = document.getElementById(divId)
             if (event.data['valid']) {
+              self.valid = true
               inputDiv.style['border-color'] = null
             } else {
+              self.valid = false
               inputDiv.style['border-color'] = 'red'
             }
         }

@@ -136,7 +136,11 @@
         tokenizer.setGatewayHost($("#gatewayHost").val());
         tokenizer.setTestGatewayHost($("#testGatewayHost").val());
 
-        tokenizer.render($("#tokenizingKey").val(), true, 'payment-form');
+        var options = {
+          postalCode: true
+        }
+
+        tokenizer.render($("#tokenizingKey").val(), true, 'payment-form', options);
 
       }
 

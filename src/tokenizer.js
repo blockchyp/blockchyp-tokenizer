@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Base64 } from 'js-base64'
 
 class BlockChypTokenizer {
   constructor () {
@@ -39,11 +40,21 @@ class BlockChypTokenizer {
     } else {
       bcFrame.setAttribute('height', '36px')
     }
+
+    // encode options
+    var optionsEncoded = Base64.encode(JSON.stringify(options))
+
+    var src = ''
+
     if (test) {
-      bcFrame.setAttribute('src', this.testGatewayHost + '/secure-input?key=' + tokenizingKey + '&origin=' + encodeURI(window.location.href))
+      src = this.testGatewayHost
     } else {
-      bcFrame.setAttribute('src', this.gatewayHost + '/secure-input?key=' + tokenizingKey + '&origin=' + encodeURI(window.location.href))
+      src = this.gatewayHost
     }
+    src = src + '/secure-input?key=' + tokenizingKey
+    src = src + '&origin=' + encodeURI(window.location.href)
+    src = src + '&options=' + optionsEncoded
+    bcFrame.setAttribute('src', src)
     inputDiv.appendChild(bcFrame)
     window.addEventListener('message', function (event) {
       if (event.data['message']) {

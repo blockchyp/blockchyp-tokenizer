@@ -5,6 +5,7 @@ class BlockChypTokenizer {
     this.gatewayHost = 'https://api.blockchyp.com'
     this.testGatewayHost = 'https://test.blockchyp.com'
     this.defaultTimeout = 60
+    this.inputDiv = null
   }
 
   setGatewayHost (host) {
@@ -24,13 +25,14 @@ class BlockChypTokenizer {
   }
 
   render (tokenizingKey, test, divId, options) {
+    this.inputDiv = divId
     var inputDiv = document.getElementById(divId)
     inputDiv.setAttribute('style', 'margin: 0; padding: 0;')
     var bcFrame = document.createElement('iframe')
     bcFrame.setAttribute('style', 'margin: 0; padding: 0;')
     bcFrame.setAttribute('id', 'blockchypSecureInput')
     bcFrame.setAttribute('frameBorder', '0')
-    bcFrame.setAttribute('scrolling', 'false')
+    bcFrame.setAttribute('scrolling', 'no')
     bcFrame.setAttribute('width', '100%')
     if ((options) && (options.height)) {
       bcFrame.setAttribute('height', options.height)
@@ -38,11 +40,24 @@ class BlockChypTokenizer {
       bcFrame.setAttribute('height', '36px')
     }
     if (test) {
-      bcFrame.setAttribute('src', this.testGatewayHost + '/secure-input?key=' + tokenizingKey)
+      bcFrame.setAttribute('src', this.testGatewayHost + '/secure-input?key=' + tokenizingKey + '&origin=' + encodeURI(window.location.href))
     } else {
-      bcFrame.setAttribute('src', this.gatewayHost + '/secure-input?key=' + tokenizingKey)
+      bcFrame.setAttribute('src', this.gatewayHost + '/secure-input?key=' + tokenizingKey + '&origin=' + encodeURI(window.location.href))
     }
     inputDiv.appendChild(bcFrame)
+    window.addEventListener('message', function (event) {
+      if (event.data['message']) {
+        switch (event.data['message']) {
+          case 'validate':
+            var inputDiv = document.getElementById(divId)
+            if (event.data['valid']) {
+              inputDiv.style['border-color'] = null
+            } else {
+              inputDiv.style['border-color'] = 'red'
+            }
+        }
+      }
+    })
   }
 
   tokenize (tokenizingKey, request) {
@@ -54,17 +69,15 @@ class BlockChypTokenizer {
       url = self.gatewayHost
     }
     if (document.getElementById('blockchypSecureInput')) {
-      if (!request['transactionRef']) {
-        request['transactionRef'] = Math.random().toString(36).substring(2, 15)
-      }
       var promise = new Promise(function (resolve, reject) {
         window.addEventListener('message', function (event) {
-          console.log('Response: ' + JSON.stringify(event))
-          resolve(event)
+          if (!event.data['message']) {
+            console.log('Response: ' + JSON.stringify(event))
+            resolve(event)
+          }
         })
       })
       request['origin'] = window.location.href
-      window.addEventListener('message', this.handleTokenizationResponse)
       document.getElementById('blockchypSecureInput').contentWindow.postMessage(request, url)
       return promise
     } else {

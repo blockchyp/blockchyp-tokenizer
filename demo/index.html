@@ -14,7 +14,6 @@
 
     <style>
       .content {
-        width: 600px;
         margin-left: auto;
         margin-right: auto;
       }
@@ -26,95 +25,94 @@
     <nav class="nav navbar-expand-md navbar-dark bg-dark">
       <a class="navbar-brand" href="#">BlockChyp Tokenizer Demo</a>
     </nav>
-    <div class="content mt-5">
-      <div class="card mt-5">
-        <div class="card-header">
-          Configuration
-        </div>
-        <div class="card-body">
-          <form>
-            <div class="form-group">
-              <label for="tokenizingKey">Tokenizing Key</label>
-              <input class="form-control form-control-sm" id="tokenizingKey"/>
+    <div class="content mt-5 ml-5 mr-5">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              Configuration
             </div>
-            <div class="form-group">
-              <label for="gatewayHost">Gateway Host</label>
-              <input class="form-control form-control-sm" id="gatewayHost" value="https://api.dev.blockchyp.com"/>
+            <div class="card-body">
+              <form onsubmit="saveConfig(event)">
+                <div class="form-group">
+                  <label for="tokenizingKey">Tokenizing Key</label>
+                  <input class="form-control form-control-sm" id="tokenizingKey"/>
+                </div>
+                <div class="form-group">
+                  <label for="gatewayHost">Gateway Host</label>
+                  <input class="form-control form-control-sm" id="gatewayHost" value="https://api.dev.blockchyp.com"/>
+                </div>
+                <div class="form-group">
+                  <label for="testGatewayHost">Test Gateway Host</label>
+                  <input class="form-control form-control-sm" id="testGatewayHost" value="https://test.dev.blockchyp.com"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="testGatewayHost">Test Gateway Host</label>
-              <input class="form-control form-control-sm" id="testGatewayHost" value="https://test.dev.blockchyp.com"/>
+          </div> <!-- config card -->
+        </div> <!-- col -->
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              Full Payment Form Rendering
             </div>
-          </form>
-        </div>
-      </div> <!-- config card -->
-      <div class="card mt-5">
-        <div class="card-header">
-          Hands Off Payment Form
-        </div>
-        <div class="card-body">
-          <div class="text-muted">
-            This example shows how tokenization works when the form is completely
-            rendered by the host application and the host application just uses
-            the tokenization API.
-          </div>
-          <form class="mt-5" onsubmit="tokenizeHandsOffForm(event)">
-            <div class="form-group">
-              <label for="handsoff.pan">Card Number</label>
-              <input class="form-control form-control-sm" id="handsoff-pan"/>
-              <div class="input-group">
-                <input class="form-control form-control-sm" id="handsoff-expMonth" placeholder="MM"/>
-                /
-                <input class="form-control form-control-sm" id="handsoff-expYear" placeholder="YY"/>
-                <input class="form-control form-control-sm" id="handsoff-cvv" placeholder="CVV"/>
-                <input class="form-control form-control-sm" id="handsoff-postalCode" placeholder="ZIP CODE"/>
+            <div class="card-body">
+              <div class="text-muted">
+                This example shows how the entire card input block can be
+                rendered.  Less control over the final look of the form, but
+                this is the best choice for merchants looking to minimize their
+                PCI scope.
               </div>
+              <form class="mt-1" onsubmit="tokenizeSecureInput(event)">
+                <div class="form-group">
+                  <label for="handsoff.pan">Card Number</label>
+                  <div id="payment-form" class="form-control"></div>
+                </div>
+                <div class="form-group">
+                  <label for="rendered-cardholder">Cardholder Name</label>
+                  <input class="form-control" id="rendered-cardholder"/>
+                </div>
+                <button type="button" class="btn btn-danger" onclick="renderForm(event)">Render</button><button type="submit" class="ml-1 btn btn-primary">Submit</button>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="handsoff.cardholder">Cardholder Name</label>
-              <input class="form-control form-control-sm" id="handsoff-cardholder"/>
+          </div> <!-- full rendering card -->
+        </div> <!-- col-md-6 -->
+      </div> <!-- row -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mt-5">
+            <div class="card-header">
+              Hands Off Payment Form
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-      </div> <!-- handsoff card -->
-      <div class="card mt-5">
-        <div class="card-header">
-          Payment Input Decoration
-        </div>
-        <div class="card-body">
-          <div class="text-muted">
-            This example shows how the card input can be enhanced for a better
-            user experience, but stops short of full form rendering.
-          </div>
-          <form class="mt-5" onsubmit="tokenizeInputDecoration(event)">
-            <div class="form-group">
-              <label for="handsoff.pan">Card Number</label>
-              <div class="form-control form-control-sm" id="decorated-pan"></div>
+            <div class="card-body">
+              <div class="text-muted">
+                This example shows how tokenization works when the form is completely
+                rendered by the host application and the host application just uses
+                the tokenization API. This is a good option for developers that want
+                fine grained control of the UX, but leaves merchants in SAQ A-EP PCI scope.
+              </div>
+              <form class="mt-1" onsubmit="tokenizeHandsOffForm(event)">
+                <div class="form-group">
+                  <label for="handsoff.pan">Card Number</label>
+                  <input class="form-control form-control-sm" id="handsoff-pan"/>
+                  <div class="input-group">
+                    <input class="form-control form-control-sm" id="handsoff-expMonth" placeholder="MM"/>
+                    /
+                    <input class="form-control form-control-sm" id="handsoff-expYear" placeholder="YY"/>
+                    <input class="form-control form-control-sm" id="handsoff-cvv" placeholder="CVV"/>
+                    <input class="form-control form-control-sm" id="handsoff-postalCode" placeholder="ZIP CODE"/>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="handsoff.cardholder">Cardholder Name</label>
+                  <input class="form-control form-control-sm" id="handsoff-cardholder"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="handsoff.cardholder">Cardholder Name</label>
-              <input class="form-control form-control-sm" id="decorated-cardholder"/>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-      </div> <!-- decorated card -->
-      <div class="card mt-5">
-        <div class="card-header">
-          Full Payment Form Rendering
-        </div>
-        <div class="card-body">
-          <div class="text-muted">
-            This example shows how the entire card input block can be
-            rendered.
-          </div>
-          <form class="mt-5" onsubmit="tokenizeInputDecoration(event)">
-            <div id="payment-form"></div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
-      </div> <!-- full rendering card -->
+          </div> <!-- handsoff card -->
+        </div> <!-- col-md-6 -->
+      </div> <!-- row -->
     </div>
 
 
@@ -123,6 +121,46 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="../dist/blockchyp-tokenizer-all.min.js"></script>
     <script type="text/javascript">
+
+      function saveConfig (e) {
+
+        e.preventDefault();
+
+        localStorage.setItem('tokenizingKey', $('#tokenizingKey').val());
+        localStorage.setItem('gatewayHost', $('#gatewayHost').val());
+        localStorage.setItem('testGatewayHost', $('#testGatewayHost').val());
+      }
+
+      function renderForm (e) {
+
+        tokenizer.setGatewayHost($("#gatewayHost").val());
+        tokenizer.setTestGatewayHost($("#testGatewayHost").val());
+
+        tokenizer.render($("#tokenizingKey").val(), true, 'payment-form');
+
+      }
+
+      function tokenizeSecureInput (e) {
+
+        e.preventDefault();
+
+        tokenizer.setGatewayHost($("#gatewayHost").val());
+        tokenizer.setTestGatewayHost($("#testGatewayHost").val());
+
+        let req = {
+          test: true,
+          cardholderName: $("#rendered-cardholder").val()
+        }
+
+        tokenizer.tokenize($("#tokenizingKey").val(), req)
+          .then(function (response) {
+            alert('Full Input Response: ' + JSON.stringify(response.data));
+          })
+          .catch(function (error) {
+            alert("Error:", error);
+          })
+
+      }
 
       function tokenizeHandsOffForm (e) {
 
@@ -138,12 +176,12 @@
           expYear: $("#handsoff-expYear").val(),
           cvv: $("#handsoff-cvv").val(),
           postalcode: $("#handsoff-postalCode").val(),
-          cardholderName: $("#handsoff-postalCode").val()
+          cardholderName: $("#handsoff-cardholder").val()
         }
 
         tokenizer.tokenize($("#tokenizingKey").val(), req)
           .then(function (response) {
-            alert(JSON.stringify(response.data));
+            alert('Hands Off Response: ' + JSON.stringify(response.data));
           })
           .catch(function (error) {
             alert("Error:", error);
@@ -151,9 +189,9 @@
 
       }
 
-      tokenizer.enhance('decorated-pan');
-
-      tokenizer.render('payment-form');
+      $('#tokenizingKey').val(localStorage.getItem('tokenizingKey'));
+      $('#gatewayHost').val(localStorage.getItem('gatewayHost'));
+      $('#testGatewayHost').val(localStorage.getItem('testGatewayHost'));
 
     </script>
 

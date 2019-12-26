@@ -47,9 +47,6 @@ class BlockChypTokenizer {
       bcFrame.setAttribute('height', '36px')
     }
 
-    // encode options
-    var optionsEncoded = Base64.encode(JSON.stringify(options))
-
     var src = ''
 
     if (test) {
@@ -59,7 +56,12 @@ class BlockChypTokenizer {
     }
     src = src + '/secure-input?key=' + tokenizingKey
     src = src + '&origin=' + encodeURI(window.location.href)
-    src = src + '&options=' + optionsEncoded
+
+    if (options) {
+      // encode options
+      var optionsEncoded = Base64.encode(JSON.stringify(options))
+      src = src + '&options=' + optionsEncoded
+    }
     bcFrame.setAttribute('src', src)
     inputDiv.appendChild(bcFrame)
     window.addEventListener('message', function (event) {
@@ -95,9 +97,9 @@ class BlockChypTokenizer {
             resolve(event)
           }
         })
+        request['origin'] = window.location.href
+        document.getElementById('blockchypSecureInput').contentWindow.postMessage(request, url)
       })
-      request['origin'] = window.location.href
-      document.getElementById('blockchypSecureInput').contentWindow.postMessage(request, url)
       return promise
     } else {
       url = url + '/api/tokenize'

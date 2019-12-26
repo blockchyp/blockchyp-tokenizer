@@ -67,10 +67,25 @@
                 <div class="form-group">
                   <label for="handsoff.pan">Card Number</label>
                   <div id="payment-form" class="form-control"></div>
+                  <div id="payment-form-error" class="alert alert-danger" style="display: none;"></div>
                 </div>
                 <div class="form-group">
                   <label for="rendered-cardholder">Cardholder Name</label>
                   <input class="form-control" id="rendered-cardholder"/>
+                </div>
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="rendered-cardholder">Test:</label>
+                      <input type="checkbox" id="rendered-test" checked/>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="rendered-cardholder">Postal Code:</label>
+                      <input type="checkbox" id="rendered-postalcode"/>
+                    </div>
+                  </div>
                 </div>
                 <button type="button" class="btn btn-danger" onclick="renderForm(event)">Render</button><button type="submit" class="ml-1 btn btn-primary">Submit</button>
               </form>
@@ -137,10 +152,10 @@
         tokenizer.setTestGatewayHost($("#testGatewayHost").val());
 
         var options = {
-          postalCode: true
+          postalCode: $("#rendered-postalcode").is(':checked')
         }
 
-        tokenizer.render($("#tokenizingKey").val(), true, 'payment-form', options);
+        tokenizer.render($("#tokenizingKey").val(), $("#rendered-test").is(':checked'), 'payment-form', options);
 
       }
 
@@ -152,7 +167,7 @@
         tokenizer.setTestGatewayHost($("#testGatewayHost").val());
 
         let req = {
-          test: true,
+          test: $("#rendered-test").is(':checked'),
           cardholderName: $("#rendered-cardholder").val()
         }
 

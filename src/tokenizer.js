@@ -64,17 +64,25 @@ class BlockChypTokenizer {
     }
     bcFrame.setAttribute('src', src)
     inputDiv.appendChild(bcFrame)
+    if (document.getElementById(divId + '-error')) {
+      var errorDiv = document.getElementById(divId + '-error')
+      errorDiv.style.display = 'none'
+    }
     window.addEventListener('message', function (event) {
       if (event.data['message']) {
         switch (event.data['message']) {
           case 'validate':
             var inputDiv = document.getElementById(divId)
+            var errorDiv = document.getElementById(self.inputDiv + '-error')
             if (event.data['valid']) {
               self.valid = true
               inputDiv.style['border-color'] = null
+              errorDiv.style.display = 'none'
             } else {
               self.valid = false
               inputDiv.style['border-color'] = 'red'
+              errorDiv.style.display = 'block'
+              errorDiv.innerText = event.data.error
             }
         }
       }
@@ -90,10 +98,19 @@ class BlockChypTokenizer {
       url = self.gatewayHost
     }
     if (document.getElementById('blockchypSecureInput')) {
+      var errorDiv = document.getElementById(self.inputDiv + '-error')
+      errorDiv.style.display = 'none'
       var promise = new Promise(function (resolve, reject) {
         window.addEventListener('message', function (event) {
           if (!event.data['message']) {
             console.log('Response: ' + JSON.stringify(event))
+            if (!event.data.success) {
+              if (document.getElementById(self.inputDiv + '-error')) {
+                var errorDiv = document.getElementById(self.inputDiv + '-error')
+                errorDiv.style.display = 'block'
+                errorDiv.innerText = event.data.responseDescription
+              }
+            }
             resolve(event)
           }
         })

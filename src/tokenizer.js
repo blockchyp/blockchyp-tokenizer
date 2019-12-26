@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Base64 } from 'js-base64'
 
-class BlockChypTokenizer {
+export class BlockChypTokenizer {
   constructor () {
     this.gatewayHost = 'https://api.blockchyp.com'
     this.testGatewayHost = 'https://test.blockchyp.com'
@@ -126,4 +126,5 @@ class BlockChypTokenizer {
 }
 
 var Tokenizer = new BlockChypTokenizer()
+module.exports = BlockChypTokenizer
 export default Tokenizer

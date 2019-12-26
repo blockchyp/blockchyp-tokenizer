@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>BlockChyp Tokenizer Demo for Materialize</title>
+    <!-- vendor css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <style>
+      #content {
+        margin-left: auto;
+        margin-right: auto;
+        width: 600px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <nav class="nav navbar-expand-md navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">BlockChyp Custom CSS Demo</a>
+    </nav>
+
+    <div id="content">
+      <div class="card mt-5">
+        <div class="card-header">
+          Custom CSS Demo
+        </div>
+        <div class="card-body">
+          <form class="mt-1" onsubmit="tokenizeSecureInput(event)">
+            <div class="form-group">
+              <label for="handsoff.pan">Card Number</label>
+              <div id="payment-form" class="form-control"></div>
+              <div id="payment-form-error" class="alert alert-danger" style="display: none;"></div>
+            </div>
+            <div class="form-group">
+              <label for="rendered-cardholder">Cardholder Name</label>
+              <input class="form-control" id="rendered-cardholder"/>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="rendered-cardholder">Test:</label>
+                  <input type="checkbox" id="rendered-test" checked/>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="rendered-cardholder">Postal Code:</label>
+                  <input type="checkbox" id="rendered-postalcode"/>
+                </div>
+              </div>
+            </div>
+            <div>
+<textarea id="rendered-css" rows="10" cols="40">
+  {
+    "#secure-input input": {
+      "border": "0",
+      "background-color": "red"
+    }
+  }
+</textarea>
+            </div>
+            <button type="button" class="btn btn-danger" onclick="renderForm(event)">Render</button><button type="submit" class="ml-1 btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div> <!-- full rendering card -->
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="../dist/blockchyp-tokenizer-all.min.js"></script>
+    <script type="text/javascript">
+
+
+      function renderForm (e) {
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        var style = JSON.parse($("#rendered-css").val())
+
+        var options = {
+          postalCode: $("#rendered-postalcode").is(':checked'),
+          framework: 'none',
+          style: style
+        }
+
+        tokenizer.render(localStorage.getItem('tokenizingKey'), $("#rendered-test").is(':checked'), 'payment-form', options);
+
+      }
+
+      function tokenizeSecureInput (e) {
+
+        e.preventDefault();
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        let req = {
+          test: $("#rendered-test").is(':checked'),
+          cardholderName: $("#rendered-cardholder").val()
+        }
+
+        tokenizer.tokenize(localStorage.getItem('tokenizingKey'), req)
+          .then(function (response) {
+            alert('Full Input Response: ' + JSON.stringify(response.data));
+          })
+          .catch(function (error) {
+            alert("Error:", error);
+          })
+
+      }
+
+    </script>
+
+
+    <!-- built files will be auto injected -->
+  </body>
+</html>

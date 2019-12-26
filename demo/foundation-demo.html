@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>BlockChyp Tokenizer Demo for Foundation 6</title>
+    <!-- vendor css -->
+
+
+    <!-- Slim CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="foundation/foundation.min.css">
+
+    <style>
+      #content {
+        margin-left: auto;
+        margin-right: auto;
+        width: 600px;
+        padding-top: 40px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li class="menu-text">BlockChyp Tokenizer Demo for Foundation 6</li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="content">
+      <div class="card">
+        <div class="card-divider">
+          Foundation 6 Demo Form
+        </div>
+        <div class="card-section">
+          <form>
+            <div class="grid-container">
+                <label>Card Number
+                  <div id="payment-form"></div>
+                  <div id="payment-form-error" class="alert alert-danger" style="display: none;"></div>
+                </label>
+                <label>Cardholder Name
+                  <input type="text" id="rendered-cardholder">
+                </label>
+                <div class="button-group">
+                  <button type="button" class="button" onclick="renderForm(event)">Render</button><button class="button" type="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="foundation/foundation.min.js"></script>
+    <script src="../dist/blockchyp-tokenizer-all.min.js"></script>
+    <script type="text/javascript">
+
+
+      function renderForm (e) {
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        var options = {
+          postalCode: $("#rendered-postalcode").is(':checked'),
+          framework: 'foundation'
+        }
+
+        tokenizer.render(localStorage.getItem('tokenizingKey'), $("#rendered-test").is(':checked'), 'payment-form', options);
+
+      }
+
+      function tokenizeSecureInput (e) {
+
+        e.preventDefault();
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        let req = {
+          test: $("#rendered-test").is(':checked'),
+          cardholderName: $("#rendered-cardholder").val()
+        }
+
+        tokenizer.tokenize(localStorage.getItem('tokenizingKey'), req)
+          .then(function (response) {
+            alert('Full Input Response: ' + JSON.stringify(response.data));
+          })
+          .catch(function (error) {
+            alert("Error:", error);
+          })
+
+      }
+
+    </script>
+
+
+    <!-- built files will be auto injected -->
+  </body>
+</html>

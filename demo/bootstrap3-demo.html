@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>BlockChyp Tokenizer Demo for Bootstrap 3</title>
+    <!-- vendor css -->
+
+
+    <!-- Slim CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <style>
+      #content {
+        margin-left: auto;
+        margin-right: auto;
+        width: 600px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            BlockChyp Tokenizer Demo for Bootstrap 3
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div id="content">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Bootstrap 3 Demo Form</h3>
+        </div>
+        <div class="panel-body">
+          <form class="mt-1" onsubmit="tokenizeSecureInput(event)">
+            <div class="form-group">
+              <label for="handsoff.pan">Card Number</label>
+              <div id="payment-form" class="form-control"></div>
+              <div id="payment-form-error" class="alert alert-danger" style="display: none;"></div>
+            </div>
+            <div class="form-group">
+              <label for="rendered-cardholder">Cardholder Name</label>
+              <input class="form-control" id="rendered-cardholder"/>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="rendered-cardholder">Test:</label>
+                  <input type="checkbox" id="rendered-test" checked/>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="rendered-cardholder">Postal Code:</label>
+                  <input type="checkbox" id="rendered-postalcode"/>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-danger" onclick="renderForm(event)">Render</button><button type="submit" class="ml-1 btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../dist/blockchyp-tokenizer-all.min.js"></script>
+    <script type="text/javascript">
+
+
+      function renderForm (e) {
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        var options = {
+          postalCode: $("#rendered-postalcode").is(':checked'),
+          framework: 'bootstrap3'
+        }
+
+        tokenizer.render(localStorage.getItem('tokenizingKey'), $("#rendered-test").is(':checked'), 'payment-form', options);
+
+      }
+
+      function tokenizeSecureInput (e) {
+
+        e.preventDefault();
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        let req = {
+          test: $("#rendered-test").is(':checked'),
+          cardholderName: $("#rendered-cardholder").val()
+        }
+
+        tokenizer.tokenize(localStorage.getItem('tokenizingKey'), req)
+          .then(function (response) {
+            alert('Full Input Response: ' + JSON.stringify(response.data));
+          })
+          .catch(function (error) {
+            alert("Error:", error);
+          })
+
+      }
+
+    </script>
+
+
+    <!-- built files will be auto injected -->
+  </body>
+</html>

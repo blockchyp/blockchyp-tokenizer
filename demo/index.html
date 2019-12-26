@@ -10,7 +10,6 @@
     <!-- Slim CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="../assets/css/blockchyp-tokenizer.css">
 
     <style>
       .content {
@@ -127,6 +126,21 @@
             </div>
           </div> <!-- handsoff card -->
         </div> <!-- col-md-6 -->
+        <div class="col-md-6">
+          <div class="card mt-5">
+            <div class="card-header">
+              Alternate Front End Frameworks
+            </div>
+            <div class="card-body">
+              <ul>
+                <li><a href="bootstrap3-demo.html">Bootstrap 3</a></li>
+                <li><a href="materialize-demo.html">Materialize</a></li>
+                <li><a href="foundation-demo.html">Foundation</a></li>
+                <li><a href="custom-css-demo.html">Custom CSS</a></li>
+              </ul>
+            </div>
+          </div> <!-- config card -->
+        </div> <!-- col -->
       </div> <!-- row -->
     </div>
 
@@ -173,6 +187,7 @@
 
         tokenizer.tokenize($("#tokenizingKey").val(), req)
           .then(function (response) {
+            console.log(JSON.stringify(response.data))
             alert('Full Input Response: ' + JSON.stringify(response.data));
           })
           .catch(function (error) {

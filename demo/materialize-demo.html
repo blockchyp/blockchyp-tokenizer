@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <title>BlockChyp Tokenizer Demo for Materialize</title>
+    <!-- vendor css -->
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <style>
+      #content {
+        margin-left: auto;
+        margin-right: auto;
+        width: 600px;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">BlockChyp Tokenizer Demo for Materialize</a>
+      </div>
+    </nav>
+
+    <div id="content">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title activator grey-text text-darken-4">Materialize Demo Form</span>
+          <div class="row">
+            <form class="col s12">
+              <div class="row">
+                <div class="input-field col s12">
+                  <div type="text" placeholder="Placeholder" id="payment-form"></div>
+                  <label for="payment-form">Card Number</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input type="text" id="rendered-cardholder">
+                  <label for="rendered-cardholder">Cardholder Name</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input type="checkbox" id="rendered-test" checked="checked" class="validate"/>
+                  <label for="rendered-test">Test</label>
+                </div>
+              </div>
+              <div>
+                <button type="button" class="waves-effect waves-light btn" onclick="renderForm(event)">RENDER</button>
+                <button type="submit" class="waves-effect waves-light btn">SUBMIT</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="../dist/blockchyp-tokenizer-all.min.js"></script>
+    <script type="text/javascript">
+
+
+      function renderForm (e) {
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        var options = {
+          postalCode: $("#rendered-postalcode").is(':checked'),
+          framework: 'materialize'
+        }
+
+        tokenizer.render(localStorage.getItem('tokenizingKey'), $("#rendered-test").is(':checked'), 'payment-form', options);
+
+      }
+
+      function tokenizeSecureInput (e) {
+
+        e.preventDefault();
+
+        tokenizer.setGatewayHost(localStorage.getItem('gatewayHost'));
+        tokenizer.setTestGatewayHost(localStorage.getItem('testGatewayHost'));
+
+        let req = {
+          test: $("#rendered-test").is(':checked'),
+          cardholderName: $("#rendered-cardholder").val()
+        }
+
+        tokenizer.tokenize(localStorage.getItem('tokenizingKey'), req)
+          .then(function (response) {
+            alert('Full Input Response: ' + JSON.stringify(response.data));
+          })
+          .catch(function (error) {
+            alert("Error:", error);
+          })
+
+      }
+
+    </script>
+
+
+    <!-- built files will be auto injected -->
+  </body>
+</html>

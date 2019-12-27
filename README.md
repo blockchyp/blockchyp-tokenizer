@@ -29,7 +29,7 @@ DOM and all input elements.  Developers using direct Javascript tokenization
 without iframes are also required to retain a QSA and complete a ROC if their
 transaction volume is above the usual self assessment levels.
 
-More detail on PCI compliance rules for each scenario can be found in [Best Practices for E-Commerce E-Commerce](https://www.pcisecuritystandards.org/pdfs/best_practices_securing_ecommerce.pdf), a
+More detail on PCI compliance rules for each scenario can be found in [Best Practices for E-Commerce](https://www.pcisecuritystandards.org/pdfs/best_practices_securing_ecommerce.pdf), a
 supplement to the core PCI security standard provided by the PCI Council.
 
 ## Installing The Tokenizer
@@ -38,16 +38,16 @@ The tokenizer can be obtained directly from BlockChyp or via NPM.
 
 ### NPM
 
-If you're using NPM, the following code will add the BlockChyp Tokenizer as
+If you're using NPM, the following command will add the BlockChyp Tokenizer as
 a project dependency.
 
 ```
-npm install blockchyp-tokenizer --save
+npm install @blockchyp/blockchyp-tokenizer --save
 ```
 
 ### Manual Installation
 
-You can also drop the tokenizer directly into web pages by pasting the following script tag:
+You can also drop the tokenizer directly into web pages by pasting in the following script tag:
 
 ```
 <script src="https://api.blockchyp.com/static/js/blockchyp-tokenizer-all.min.js"></script>
@@ -62,7 +62,7 @@ a popup form like this:
 ![Tokenizing Key Generation](docs/images/tokenizing-key-example.png)
 
 Add your web site as a referer, copy the Tokenizing Key to your configuration, and save the key.  You won't be able to see the full tokenizing key ever again.  In
-production, we recommend delete protection.
+production, we recommend enabling delete protection.
 
 ### IFrame Based Tokenization (Recommended)
 
@@ -248,9 +248,9 @@ where using custom CSS for the payment input might be necessary, but this
 isn't a complete solution.  Some of you will need more fine grained control over
 your input rendering.
 
-The options option also has a style property for use in situations where custom
-CSS in necessary.  Custom CSS is passed into the options object as a Javascript
-map as show in the following example.  This example includes most of the default
+The options object has a style property for use in situations where custom
+CSS is necessary.  Custom CSS is passed into the options object as a Javascript
+map as shown in the example below.  This example includes most of the default
 CSS for Bootstrap 4 which can be tweaked for custom scenarios.
 
 ```
@@ -303,9 +303,10 @@ CSS for Bootstrap 4 which can be tweaked for custom scenarios.
 ```
 Custom CSS can extend and override the existing CSS for a given front end
 framework or style the input completely from scratch.  Setting framework to
-'none' will remove all framework CSS from the input element.
+'none' will remove all framework CSS from the input element and let you start
+from scratch.
 
-Note that any CSS that references external files or images will not be supported.
+Note that any CSS that references external files or images will be ignored.
 
 ### Direct Tokenization (Not Recommended, Increases PCI Scope)
 
@@ -332,7 +333,7 @@ fields as shown in the following jQuery based example:
     </div>
   </div>
   <div class="form-group">
-    <label for="handsoff.cardholder">Cardholder Name</label>
+    <label for="cardholder">Cardholder Name</label>
     <input class="form-control form-control-sm" id="cardholder"/>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>

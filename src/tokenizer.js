@@ -126,5 +126,4 @@ export class BlockChypTokenizer {
 }
 
 var Tokenizer = new BlockChypTokenizer()
-module.exports = BlockChypTokenizer
 export default Tokenizer

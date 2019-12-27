@@ -85,7 +85,7 @@ the following example:
 </form>
 ```
 
-Create a DIV wherever you'd like the input control.  Assing the DIV a unique ID
+Create a DIV wherever you'd like the input control.  Assign the DIV a unique ID
 of your choosing and optionally provide a second DIV whose id should be the same
 as that of the payment input appended with '-error'.
 
@@ -241,6 +241,149 @@ export default {
 </script>
 ```
 
+#### Custom CSS
+
+The options framework property is intended to reduce the number of situations
+where using custom CSS for the payment input might be necessary, but this
+isn't a complete solution.  Some of you will need more fine grained control over
+your input rendering.
+
+The options option also has a style property for use in situations where custom
+CSS in necessary.  Custom CSS is passed into the options object as a Javascript
+map as show in the following example.  This example includes most of the default
+CSS for Bootstrap 4 which can be tweaked for custom scenarios.
+
+```
+  var options = {
+    framework: 'none',
+    style: {
+      '#secure-input': {
+        'font-size': '14pt',
+        'min-width': '345px'
+      },
+      '#secure-input input': {
+        'border': '0',
+        'font-size': '14pt'
+      },
+      '#secure-input input:focus': {
+        'outline-width': '0'
+      },
+      '#secure-input .panInput': {
+        'margin-left': '3px',
+        'margin-right': '3px',
+        'min-width': '140px'
+      },
+      '#secure-input .dateInput': {
+        'width': '35px'
+      },
+      '#secure-input .cvvInput': {
+        'width': '40px',
+        'margin-left': '3px'
+      },
+      '#secure-input .postalCodeInput': {
+        'width': '100px',
+        'margin-left': '3px'
+      },
+      '.placeholderText': {
+        'font-weight': 'bold',
+        'color': '#777777'
+      },
+      '.cardIcon': {
+        'color': '#777777',
+        'font-size': '18pt'
+      },
+      '#cardImage': {
+        'max-height': '24px'
+      }
+    }
+  }
+
+  tokenizer.render('<TOKENIZING_KEY>', true, 'secure-input', options);
+
+```
+Custom CSS can extend and override the existing CSS for a given front end
+framework or style the input completely from scratch.  Setting framework to
+'none' will remove all framework CSS from the input element.
+
+Note that any CSS that references external files or images will not be supported.
+
 ### Direct Tokenization (Not Recommended, Increases PCI Scope)
 
-This method bypasses the cross-origin iframe
+This method bypasses the cross-origin iframe and allows you to pass
+card data directly into the tokenizer.
+
+*Note:* This method does not protect payment forms from malicious JavaScript
+and may require a fully validated Record of Compliance for PCI Certification.
+
+To use this method of tokenization, create a form with all the usual payment
+fields as shown in the following jQuery based example:
+
+```
+<form onsubmit="submitPaymentForm(event)">
+  <div class="form-group">
+    <label for="pan">Card Number</label>
+    <input class="form-control form-control-sm" id="pan"/>
+    <div class="input-group">
+      <input class="form-control form-control-sm" id="expMonth" placeholder="MM"/>
+      /
+      <input class="form-control form-control-sm" id="expYear" placeholder="YY"/>
+      <input class="form-control form-control-sm" id="cvv" placeholder="CVV"/>
+      <input class="form-control form-control-sm" id="postalCode" placeholder="ZIP CODE"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="handsoff.cardholder">Cardholder Name</label>
+    <input class="form-control form-control-sm" id="cardholder"/>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+```
+
+The form submission handler is largely the same as for an iframe based form, with the exception of adding card data manually to the request.
+
+jQuery Example:
+```
+function submitPaymentForm(event) {
+
+  event.preventDefault();
+
+  var req = {
+    test: true,
+    transactionRef: 'YOUR TRANSACTION OR TENDER ID',
+    postalCode: $('#postalCode').val(), //if you have a seperate postal code input
+    cardholderName: $('#cardholder').val(),
+    pan: $('#pan').val(),
+    expMonth: $('#expMonth).val(),
+    expYear: $('#expYear).val(),
+    cvv: $('#cvv').val()
+  }
+
+  tokenizer.tokenize('<TOKENIZING_KEY>', req)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+      console.log("Token: " + response.data.token);
+      //add your real form submission code here
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+
+}
+```
+
+Sample JSON Response:
+```
+{
+  "success": true,
+  "error": "Approved",
+  "responseDescription": "Approved",
+  "transactionId": "M3X3RZRIFAI6VO4ENSLM7WZLHE",
+  "transactionRef": "YOUR TRANSACTION OR TENDER ID",
+  "token": "USAXQBVT3IKRZQ5XQUASZEXISE",
+  "entryMethod": "ECOM",
+  "paymentType": "VISA",
+  "maskedPan": "************1111",
+  "expMonth": "12",
+  "expYear": "25"
+}
+```

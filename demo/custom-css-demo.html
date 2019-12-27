@@ -82,6 +82,52 @@
 
         var style = JSON.parse($("#rendered-css").val())
 
+
+        //default css
+        var options = {
+          framework: 'none',
+          style: {
+            '#secure-input': {
+              'font-size': '14pt',
+              'min-width': '345px'
+            },
+            '#secure-input input': {
+              'border': '0',
+              'font-size': '14pt'
+            },
+            '#secure-input input:focus': {
+              'outline-width': '0'
+            },
+            '#secure-input .panInput': {
+              'margin-left': '3px',
+              'margin-right': '3px',
+              'min-width': '140px'
+            },
+            '#secure-input .dateInput': {
+              'width': '35px'
+            },
+            '#secure-input .cvvInput': {
+              'width': '40px',
+              'margin-left': '3px',
+            },
+            '#secure-input .postalCodeInput': {
+              'width': '100px',
+              'margin-left': '3px'
+            },
+            '.placeholderText': {
+              'font-weight': 'bold',
+              'color': '#777777'
+            },
+            '.cardIcon': {
+              'color': '#777777',
+              'font-size': '18pt'
+            },
+            '#cardImage': {
+              'max-height': '24px'
+            }
+          }
+        }
+
         var options = {
           postalCode: $("#rendered-postalcode").is(':checked'),
           framework: 'none',

@@ -8,14 +8,14 @@ a token that can then be used to perform subsequent server side authorizations. 
 
 Developers can take advantage of this functionality in two different ways:
 
-The most secure and popular option is to allow BlockChyp to render the
+**Cross Origin IFrame:** The most secure and popular option is to allow BlockChyp to render the
 card data input controls.  This will put the sensitive card data entry
 fields into a cross-origin iframe hosted by BlockChyp, which means that
 card data input controls are not accessible from the parent payment page.
 According to the PCI Council, developers using this method are eligible for
 SAQ A (self assessment) and do not require a fully validated ROC (record of compliance).
 
-The downside of the iframe based approach is that merchants and e-commerce
+**Direct Tokenization:** The downside of the iframe based approach is that merchants and e-commerce
 providers have limited control of the user experience.  While BlockChyp's iframe based tokenization does allow for custom CSS and a fair degree of
 customization, some developers may wish for more fine grained control of
 how the input control looks.
@@ -312,7 +312,7 @@ Note that any CSS that references external files or images will not be supported
 This method bypasses the cross-origin iframe and allows you to pass
 card data directly into the tokenizer.
 
-*Note:* This method does not protect payment forms from malicious JavaScript
+**Note:** This method does not protect payment forms from malicious JavaScript
 and may require a fully validated Record of Compliance for PCI Certification.
 
 To use this method of tokenization, create a form with all the usual payment

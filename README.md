@@ -1,5 +1,9 @@
 # The BlockChyp Web Tokenizer
 
+[![Build Status](https://circleci.com/gh/blockchyp/blockchyp-tokenizer/tree/master.svg?style=shield)](https://circleci.com/gh/blockchyp/blockchyp-tokenizer/tree/master)
+[![NPM](https://img.shields.io/npm/v/@blockchyp/blockchyp-tokenizer)](https://www.npmjs.com/package/@blockchyp/blockchyp-tokenizer)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/blockchyp/blockchyp-tokenizer/blob/master/LICENSE)
+
 This is a simple Javascript library intended to connect public e-commerce or
 payment pages to BlockChyp in a secure way that minimizes PCI scope.
 

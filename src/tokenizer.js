@@ -55,13 +55,12 @@ export class BlockChypTokenizer {
       src = this.gatewayHost
     }
     src = src + '/secure-input?key=' + tokenizingKey
-    src = src + '&origin=' + encodeURI(window.location.href)
-
     if (options) {
       // encode options
       var optionsEncoded = Base64.encode(JSON.stringify(options))
       src = src + '&options=' + optionsEncoded
     }
+    src = src + '&origin=' + encodeURI(window.location.href)
     bcFrame.setAttribute('src', src)
     inputDiv.appendChild(bcFrame)
     if (document.getElementById(divId + '-error')) {

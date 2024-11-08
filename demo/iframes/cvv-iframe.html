@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>BlockChyp | Internal Error</title>
+
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-6jHF7Z3XI3fF4XZixAuSu0gGKrXwoX/w3uFPxC56OtjChio7wtTGJWRW53Nhx6Ev" crossorigin="anonymous">
+    <link rel="stylesheet" href="./number-iframe_files/bootstrap.min.css"/>
+    <style>
+
+      .cardImage {
+        max-height: 24px;
+      }
+
+      #secure-input {
+        white-space: nowrap;
+        margin-left: 2px;
+        margin-top: 5px;
+        font-size: 14pt;
+      }
+
+      #secure-input .cvvInput {
+        margin-left: 3px;
+        width: 70px
+      }
+
+      #secure-input .dateInput {
+        width: 100px;
+      }
+
+      #secure-input .panInput {
+        margin-left: 3px;
+        margin-right: 3px;
+      }
+
+      #secure-input .postalCodeInput {
+        margin-left: 3px;
+        width: 100px;
+      }
+
+      #secure-input input {
+        border: 0;
+        font-size: 12pt;
+      }
+
+      #secure-input input:focus {
+        outline-width: 0;
+        outline: none;
+      }
+
+      #maskedPan {
+        font-size: 12pt;
+        margin-right: 20px;
+      }
+
+      .body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .placeholderText {
+        color: #777;
+        font-weight: 700;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <div id="secure-input">
+      
+      <span class="input-container">
+          <span id="maskedPan" style="display: none;" onclick="setPanEntryMode()">****</span>
+          <input placeholder="CVV Zebra" value="342" id="cvv" class="cvvInput"  maxlength="4" tabindex="2" autocomplete="cc-csc" oninput="handleCvvInput(event)"/>
+      </span>
+    </div>
+    <script src="./number-iframe_files/axios.min.js"></script>
+    <script src="./number-iframe_files/jquery-3.5.1.min.js"></script>
+    <script src="./number-iframe_files/bootstrap.bundle.min.js"></script>
+    <script>
+
+      var formatMode = 'standard';
+      var formatLength = 19;
+      var cvvLength = 3;
+      var origin = 'http://localhost:9000/';
+
+      var cardNumberIframeId = 'number-1234567890'; // '{{.Options.cardNumberIframeId}}'
+      var cvvIframeId = 'cvv-1234567890'; // '{{.Options.cvvIframeId}}'
+
+      window.name = cvvIframeId;
+
+      function isNumericKey(e) {
+        if (e.key === '0') {
+          return true;
+        }
+        var num = Number(e.key);
+        if (num) {
+          return true;
+        }
+        return false;
+      }
+
+      function handleNumericKey(e) {
+        if (!isNumericKey(e)) {
+          e.preventDefault();
+        }
+      }
+
+      {{ if .Options.CVV }}
+        window.getCvv = () => {
+          return $('#cvv').val();
+        }
+      {{ end }}
+
+      function handleCvvInput(e) {
+        // var cvv = document.getElementById('cvv').value;
+        // console.log('firing', {cvv});
+
+        // const numberFrame = window.parent.frames[cardNumberIframeId];
+        // const numberFrame = $(`iframe#cardNumberIframeId`, window.parent.document);
+        // console.log('numberFrame', numberFrame);
+
+        // numberFrame.contentWindow.postMessage('incomingCvv', {cvv})
+      }
+
+      function handlePanKey(e) {
+
+        if (e.keyCode == 9) {
+          e.preventDefault();
+          if (document.getElementById('expDate')) {
+            document.getElementById('expDate').focus();
+          } else if (document.getElementById('cvv')) {
+            document.getElementById('cvv').focus();
+          } else if (document.getElementById('postalCode')) {
+            document.getElementById('postalCode').focus();
+          }
+          return
+        }
+        handleNumericKey(e);
+        e.preventDefault();
+        if (isNumericKey(e)) {
+          var currentValue = document.getElementById('pan').value
+          if (currentValue.length < formatLength) {
+            var pan = currentValue + e.key;
+            if (document.getElementById('imageBlock')){
+              resolveBin(pan);
+            }
+            document.getElementById('pan').value = formatPan(pan);
+            setPanEntryMode()
+
+          }
+
+          //reread
+          currentValue = document.getElementById('pan').value
+
+          if (currentValue.length === formatLength) {
+            var maskedPan = '*' + currentValue.substring(currentValue.length - 4)
+
+            document.getElementById("maskedPan").textContent = maskedPan;
+            setDateEntryMode()
+
+            if (document.getElementById('expDate')) {
+              document.getElementById('expDate').focus()
+            } else if (document.getElementById('cvv')) {
+              document.getElementById('cvv').focus()
+            } else if (document.getElementById('postalCode')) {
+              document.getElementById('postalCode').focus()
+            }
+          }
+        }
+
+      }
+
+      function handleExpKey(e) {
+
+        if (e.keyCode == 9) {
+          e.preventDefault();
+          if (document.getElementById('cvv')) {
+            document.getElementById('cvv').focus();
+          } else if (document.getElementById('postalCode')) {
+            document.getElementById('postalCode').focus();
+          }
+          return
+        }
+
+        handleNumericKey(e);
+        e.preventDefault();
+        if (isNumericKey(e)) {
+          var currentValue = document.getElementById('expDate').value;
+          if (currentValue.length < 7) {
+            if (currentValue.length == 2) {
+              currentValue = currentValue + '/';
+            }
+
+            currentValue = currentValue + e.key;
+
+            if (currentValue.length == 2) {
+              currentValue = currentValue + '/';
+            }
+
+            document.getElementById('expDate').value = currentValue;
+
+            if (currentValue.length >= 7) {
+              if (document.getElementById('cvv')) {
+                document.getElementById('cvv').focus()
+              } else if (document.getElementById('postalCode')) {
+                document.getElementById('postalCode').focus()
+              }
+            }
+          }
+        }
+
+      }
+
+      function setPanEntryMode() {
+        document.getElementById('pan').setAttribute('style', 'display: inline-block;');
+        document.getElementById('maskedPan').setAttribute('style', 'display: none;');
+
+      }
+
+      function setDateEntryMode() {
+        document.getElementById('maskedPan').setAttribute('style', 'display: inline-block;');
+        document.getElementById('pan').setAttribute('style', 'display: none;');
+      }
+
+      function formatPan(pan) {
+
+        switch (formatMode) {
+          case 'amex':
+            return formatAmex(pan);
+          default:
+            return formatStandard(pan);
+        }
+
+        return pan;
+      }
+
+      function formatCVV() {
+        document.getElementById('cvv').maxLength = cvvLength;
+      }
+
+      function formatAmex(pan) {
+        formatLength = 17;
+        cvvLength = 4;
+        pan = pan.replace(/\s+/g, '')
+        var chars = pan.split('');
+        var results = '';
+        for (var i = 0; i < chars.length; i++ ) {
+          if ((i === 4) || (i === 10)) {
+            results = results + ' ';
+          }
+          results = results + chars[i];
+        }
+        return results;
+      }
+
+      function formatStandard(pan) {
+        formatLength = 19;
+        cvvLength = 3;
+        pan = pan.replace(/\s+/g, '')
+        var chars = pan.split('');
+        var results = '';
+        for (var i = 0; i < chars.length; i++ ) {
+          if ((i > 0) && (i < chars.length) && ((i % 4) === 0)) {
+            results = results + ' ';
+          }
+          results = results + chars[i];
+        }
+        return results;
+      }
+
+      function hideAllIcons() {
+
+        document.getElementById('cardIcon').setAttribute('style', 'display: none;');
+        document.getElementById('visaImage').setAttribute('style', 'display: none;');
+        document.getElementById('mcImage').setAttribute('style', 'display: none;');
+        document.getElementById('amexImage').setAttribute('style', 'display: none;');
+        document.getElementById('discImage').setAttribute('style', 'display: none;');
+        document.getElementById('jcbImage').setAttribute('style', 'display: none;');
+        document.getElementById('cupImage').setAttribute('style', 'display: none;');
+        document.getElementById('dinersImage').setAttribute('style', 'display: none;');
+        document.getElementById('giftImage').setAttribute('style', 'display: none;');
+
+      }
+
+      function resolveBin(pan) {
+
+        var cardIcon = document.getElementById('cardIcon');
+        var cardImage = document.getElementById('cardImage');
+        var origin;
+
+        if (pan) {
+          hideAllIcons()
+          if (pan.startsWith('4')) {
+            formatMode = 'standard';
+            document.getElementById('visaImage').setAttribute('style', 'display: inline-block;');
+          } else if (pan.startsWith('5') || pan.startsWith('2')) {
+            formatMode = 'standard';
+            document.getElementById('mcImage').setAttribute('style', 'display: inline-block;');
+          } else if (pan.startsWith('65') || pan.startsWith('64') || pan.startsWith('601')) {
+            formatMode = 'standard';
+            document.getElementById('discImage').setAttribute('style', 'display: inline-block;');
+          } else if (pan.startsWith('34') || pan.startsWith('37')) {
+            formatMode = 'amex';
+            document.getElementById('amexImage').setAttribute('style', 'display: inline-block;');
+          } else if (pan.startsWith('62') || pan.startsWith('81')) {
+            formatMode = 'standard';
+            document.getElementById('cupImage').setAttribute('style', 'display: inline-block;');
+          } else if (pan.startsWith('31') || pan.startsWith('33') || pan.startsWith('35')) {
+            formatMode = 'standard';
+            document.getElementById('jcbImage').setAttribute('style', 'display: inline-block;');
+          } else if (pan.startsWith('300') || pan.startsWith('301') || pan.startsWith('303') || pan.startsWith('304') || pan.startsWith('305') || pan.startsWith('309')) {
+            formatMode = 'standard';
+            document.getElementById('dinersImage').setAttribute('style', 'display: inline-block;');
+          } else if (pan.startsWith('9')) {
+            formatMode = 'standard';
+            document.getElementById('giftImage').setAttribute('style', 'display: inline-block;');
+          } else {
+            formatMode = 'standard';
+            document.getElementById('cardIcon').setAttribute('style', 'display: inline-block;');
+          }
+        }
+      }
+
+      window.addEventListener('message', function (event) {
+        var request = event.data;
+
+        if (document.getElementById('pan')) {
+          request['pan'] = document.getElementById('pan').value.replace(/\s+/g, '');
+        }
+        if (document.getElementById('expDate')) {
+          request['expDate'] = document.getElementById('expDate').value;
+        }
+        if (document.getElementById('cvv')) {
+          request['cvv'] = document.getElementById('cvv').value;
+        }
+        if (document.getElementById('postalCode')) {
+          request['postalCode'] = document.getElementById('postalCode').value;
+        }
+
+        let config = {}
+        config['headers'] = {
+          'Authorization': 'Tokenizing-Key {{.TokenizingKey}}'
+        }
+        origin = request['origin'];
+        axios.post('/api/tokenize', request, config)
+        .then(function (response) {
+          if (!response.data.success) {
+            var validationState = {
+              message: 'validate',
+              valid: false
+            }
+            if (response.data.error) {
+              validationState.error = response.data.error
+            } else if (response.data.responseDescription) {
+              validationState.error = response.data.responseDescription
+            }
+            window.parent.postMessage(validationState, origin);
+          } else {
+            window.parent.postMessage(response.data, origin);
+          }
+        })
+        .catch(function (error) {
+          alert("IFrame Error:", JSON.stringify(error));
+        })
+
+      });
+
+      function validate() {
+
+        var validationMessage = "";
+
+        if (document.getElementById('pan') && document.getElementById('pan').value.length < formatLength) {
+          validationMessage = "Invalid Account Number";
+        } else if (document.getElementById('expDate') && document.getElementById('expDate').value.length < 5) {
+          validationMessage = "Expiration Date Is Required";
+        } else if (document.getElementById('cvv') && document.getElementById('cvv').value.length < 3) {
+          validationMessage = "CVV Is Required";
+        } else if (document.getElementById('cvv') && (formatMode === 'amex') && (document.getElementById('cvv').value.length < 4)) {
+          validationMessage = "CVV Is Required";
+        } else if (document.getElementById('postalCode') && document.getElementById('postalCode').value.length < 5) {
+          validationMessage = "Postal Code Is Required";
+        }
+
+        var valid = true
+
+        if (validationMessage) {
+          valid = false
+        }
+
+        var validationState = {
+          message: 'validate',
+          valid: valid,
+          error: validationMessage
+        }
+
+        window.parent.postMessage(validationState, origin);
+
+      }
+
+    </script>
+  </body>
+</html>

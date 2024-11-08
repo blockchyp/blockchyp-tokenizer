@@ -2,14 +2,21 @@
 <html>
   <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>BlockChyp Tokenizer Demo</title>
     <!-- vendor css -->
 
-
     <!-- Slim CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
 
     <style>
       .content {
@@ -17,10 +24,8 @@
         margin-right: auto;
       }
     </style>
-
   </head>
   <body>
-
     <nav class="nav navbar-expand-md navbar-dark bg-dark">
       <a class="navbar-brand" href="#">BlockChyp Tokenizer Demo</a>
     </nav>
@@ -28,141 +33,199 @@
       <div class="row">
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">
-              Configuration
-            </div>
+            <div class="card-header">Configuration</div>
             <div class="card-body">
               <form onsubmit="saveConfig(event)">
                 <div class="form-group">
                   <label for="tokenizingKey">Tokenizing Key</label>
-                  <input class="form-control form-control-sm" id="tokenizingKey"/>
+                  <input
+                    class="form-control form-control-sm"
+                    id="tokenizingKey"
+                  />
                 </div>
                 <div class="form-group">
                   <label for="gatewayHost">Gateway Host</label>
-                  <input class="form-control form-control-sm" id="gatewayHost" value="https://api.dev.blockchyp.com"/>
+                  <input
+                    class="form-control form-control-sm"
+                    id="gatewayHost"
+                    value="https://api.dev.blockchyp.com"
+                  />
                 </div>
                 <div class="form-group">
                   <label for="testGatewayHost">Test Gateway Host</label>
-                  <input class="form-control form-control-sm" id="testGatewayHost" value="https://test.dev.blockchyp.com"/>
+                  <input
+                    class="form-control form-control-sm"
+                    id="testGatewayHost"
+                    value="https://test.dev.blockchyp.com"
+                  />
                 </div>
-                <button type="submit" class="btn btn-primary">Save Settings</button>
+                <button type="submit" class="btn btn-primary">
+                  Save Settings
+                </button>
               </form>
             </div>
-          </div> <!-- config card -->
-        </div> <!-- col -->
+          </div>
+          <!-- config card -->
+        </div>
+        <!-- col -->
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">
-              Full Payment Input Rendering
-            </div>
+            <div class="card-header">Full Payment Input Rendering</div>
             <div class="card-body">
               <div class="text-muted">
                 This example shows how the entire card input block can be
-                rendered.  Less control over the final look of the form, but
-                this is the best choice for merchants looking to minimize their
-                PCI scope.
+                rendered. Less control over the final look of the form, but this
+                is the best choice for merchants looking to minimize their PCI
+                scope.
               </div>
               <form class="mt-1" onsubmit="tokenizeSecureInput(event)">
                 <div class="form-group">
                   <label for="handsoff.pan">Card Number</label>
-                  <div id="payment-form" class="form-control"></div>
-                  <div id="payment-form-error" class="alert alert-danger" style="display: none;"></div>
+                  <div id="number-form" class="form-control"></div>
+                  <div id="cvv-form" class="form-control"></div>
+                  <div
+                    id="number-form-error"
+                    class="alert alert-danger"
+                    style="display: none"
+                  ></div>
                 </div>
                 <div class="form-group">
                   <label for="rendered-cardholder">Cardholder Name</label>
-                  <input class="form-control" id="rendered-cardholder"/>
+                  <input
+                    class="form-control"
+                    id="rendered-cardholder"
+                    value="Pit Viper"
+                  />
                 </div>
-                <div v-if="!$('#rendered-expiration').is(':checked')" class="form-group">
+                <div
+                  v-if="!$('#rendered-expiration').is(':checked')"
+                  class="form-group"
+                >
                   <label for="expMonth">Expiration Month</label>
-                  <input class="form-control" id="expMonth"/>
+                  <input class="form-control" id="expMonth" value="03" />
                 </div>
-                <div v-if="!$('#rendered-expiration').is(':checked')" class="form-group">
+                <div
+                  v-if="!$('#rendered-expiration').is(':checked')"
+                  class="form-group"
+                >
                   <label for="expYear">Expiration Year</label>
-                  <input class="form-control" id="expYear"/>
+                  <input class="form-control" id="expYear" value="2025" />
                 </div>
                 <div class="row">
                   <div class="col-md-3">
                     <div class="form-group">
                       <label for="rendered-cardholder">Test:</label>
-                      <input type="checkbox" id="rendered-test" checked/>
+                      <input type="checkbox" id="rendered-test" checked />
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label for="rendered-cardholder">Card Logo:</label>
-                      <input type="checkbox" id="rendered-logo" checked/>
+                      <input type="checkbox" id="rendered-logo" checked />
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label for="rendered-cardholder">Card Number:</label>
-                      <input type="checkbox" id="rendered-pan" checked/>
+                      <input type="checkbox" id="rendered-pan" checked />
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label for="rendered-cardholder">Expiration Date:</label>
-                      <input type="checkbox" id="rendered-expiration" checked/>
+                      <input type="checkbox" id="rendered-expiration" checked />
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label for="rendered-cardholder">CVV:</label>
-                      <input type="checkbox" id="rendered-cvv" checked/>
+                      <input type="checkbox" id="rendered-cvv" checked />
                     </div>
                   </div>
                   <div class="col-md-3">
                     <div class="form-group">
                       <label for="rendered-cardholder">Postal Code:</label>
-                      <input type="checkbox" id="rendered-postalcode"/>
+                      <input type="checkbox" id="rendered-postalcode" />
                     </div>
                   </div>
                 </div>
-                <button type="button" class="btn btn-danger" onclick="renderForm(event)">Render</button><button type="submit" class="ml-1 btn btn-primary">Submit</button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  onclick="renderForm(event)"
+                >
+                  Render</button
+                ><button type="submit" class="ml-1 btn btn-primary">
+                  Submit
+                </button>
               </form>
             </div>
-          </div> <!-- full rendering card -->
-        </div> <!-- col-md-6 -->
-      </div> <!-- row -->
+          </div>
+          <!-- full rendering card -->
+        </div>
+        <!-- col-md-6 -->
+      </div>
+      <!-- row -->
       <div class="row">
         <div class="col-md-6">
           <div class="card mt-5">
-            <div class="card-header">
-              Hands Off Payment Form
-            </div>
+            <div class="card-header">Hands Off Payment Form</div>
             <div class="card-body">
               <div class="text-muted">
-                This example shows how tokenization works when the form is completely
-                rendered by the host application and the host application just uses
-                the tokenization API. This is a good option for developers that want
-                fine grained control of the UX, but leaves merchants in SAQ A-EP PCI scope.
+                This example shows how tokenization works when the form is
+                completely rendered by the host application and the host
+                application just uses the tokenization API. This is a good
+                option for developers that want fine grained control of the UX,
+                but leaves merchants in SAQ A-EP PCI scope.
               </div>
               <form class="mt-1" onsubmit="tokenizeHandsOffForm(event)">
                 <div class="form-group">
                   <label for="handsoff.pan">Card Number</label>
-                  <input class="form-control form-control-sm" id="handsoff-pan"/>
+                  <input
+                    class="form-control form-control-sm"
+                    id="handsoff-pan"
+                  />
                   <div class="input-group">
-                    <input class="form-control form-control-sm" id="handsoff-expMonth" placeholder="MM"/>
+                    <input
+                      class="form-control form-control-sm"
+                      id="handsoff-expMonth"
+                      placeholder="MM"
+                    />
                     /
-                    <input class="form-control form-control-sm" id="handsoff-expYear" placeholder="YY"/>
-                    <input class="form-control form-control-sm" id="handsoff-cvv" placeholder="CVV"/>
-                    <input class="form-control form-control-sm" id="handsoff-postalCode" placeholder="ZIP CODE"/>
+                    <input
+                      class="form-control form-control-sm"
+                      id="handsoff-expYear"
+                      placeholder="YY"
+                    />
+                    <input
+                      class="form-control form-control-sm"
+                      id="handsoff-cvv"
+                      placeholder="CVV"
+                    />
+                    <input
+                      class="form-control form-control-sm"
+                      id="handsoff-postalCode"
+                      placeholder="ZIP CODE"
+                    />
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="handsoff.cardholder">Cardholder Name</label>
-                  <input class="form-control form-control-sm" id="handsoff-cardholder"/>
+                  <input
+                    class="form-control form-control-sm"
+                    id="handsoff-cardholder"
+                  />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
             </div>
-          </div> <!-- handsoff card -->
-        </div> <!-- col-md-6 -->
+          </div>
+          <!-- handsoff card -->
+        </div>
+        <!-- col-md-6 -->
         <div class="col-md-6">
           <div class="card mt-5">
-            <div class="card-header">
-              Alternate Front End Frameworks
-            </div>
+            <div class="card-header">Alternate Front End Frameworks</div>
             <div class="card-body">
               <ul>
                 <li><a href="bootstrap3-demo.html">Bootstrap 3</a></li>
@@ -171,75 +234,296 @@
                 <li><a href="custom-css-demo.html">Custom CSS</a></li>
               </ul>
             </div>
-          </div> <!-- config card -->
-        </div> <!-- col -->
-      </div> <!-- row -->
+          </div>
+          <!-- config card -->
+        </div>
+        <!-- col -->
+      </div>
+      <!-- row -->
     </div>
 
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="../dist/blockchyp-tokenizer-all.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
     <script type="text/javascript">
+      // a lot of this copied from https://github.com/blockchyp/blockchyp-tokenizer/blob/master/src/tokenizer.js
+      class BlockChypTokenizer {
+        constructor(
+          tokenizingKey,
+          isTestMode = false,
+          devPortalModeEnabled = false
+        ) {
+          this.defaultTimeout = 60;
+          this.inputDiv = null;
+          this.cvvDiv = null;
+          this.valid = false;
+          this.tokenizingKey = tokenizingKey;
 
-      function saveConfig (e) {
+          this.commonId = BlockChypTokenizer.generateRandomAlphaString(10);
+          this.cardNumberIframeId = `number-${this.commonId}`;
+          this.cvvIframeId = `cvv-${this.commonId}`;
 
-        e.preventDefault();
+          this.localIframeServerMode = false;
 
-        localStorage.setItem('tokenizingKey', $('#tokenizingKey').val());
-        localStorage.setItem('gatewayHost', $('#gatewayHost').val());
-        localStorage.setItem('testGatewayHost', $('#testGatewayHost').val());
-      }
+          // this flag is whether or not a merchant is test (sandbox) or live
+          this.isTestMode = isTestMode;
 
-      function renderForm (e) {
+          // set the portal urls based on devPortalModeEnabled
+          if (devPortalModeEnabled) {
+            this.gatewayHost = "https://api.dev.blockchyp.com";
+            if (this.localIframeServerMode) {
+              this.testGatewayHost = "./iframes"; // no trailing slash
+            } else {
+              this.testGatewayHost = "https://test.dev.blockchyp.com";
+            }
+          } else {
+            this.gatewayHost = "https://api.blockchyp.com";
+            this.testGatewayHost = "https://test.blockchyp.com";
+          }
 
-        tokenizer.setGatewayHost($("#gatewayHost").val());
-        tokenizer.setTestGatewayHost($("#testGatewayHost").val());
-
-        var options = {
-          cardLogo: $("#rendered-logo").is(':checked'),
-          cardNumber: $("#rendered-pan").is(':checked'),
-          postalCode: $("#rendered-postalcode").is(':checked'),
-          expirationDate: $("#rendered-expiration").is(':checked'),
-          cvv: $("#rendered-cvv").is(':checked')
+          this.iframeHost = isTestMode
+            ? this.testGatewayHost
+            : this.gatewayHost;
         }
 
-        tokenizer.render($("#tokenizingKey").val(), $("#rendered-test").is(':checked'), 'payment-form', options);
+        static generateRandomAlphaString(length = 10) {
+          // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+          // let result = '';
+          // for (let i = 0; i < length; i++) {
+          //   result += characters.charAt(
+          //     Math.floor(Math.random() * characters.length),
+          //   );
+          // }
+          // return result;
+          return "123456789";
+        }
 
+        isValid() {
+          return this.valid;
+        }
+
+        buildBasicIframe(mode, parentEl, iframeIdToUse, options) {
+          parentEl.setAttribute("style", "margin: 0; padding: 0;");
+
+          const newFrame = document.createElement("iframe");
+          newFrame.setAttribute("style", "margin: 0; padding: 0;");
+          newFrame.setAttribute("id", iframeIdToUse);
+          newFrame.setAttribute("name", iframeIdToUse);
+          newFrame.setAttribute("frameBorder", "0");
+          newFrame.setAttribute("scrolling", "no");
+          newFrame.setAttribute("width", "100%");
+          if (options && options.height) {
+            newFrame.setAttribute("height", options.height);
+          } else {
+            newFrame.setAttribute("height", "36px");
+          }
+
+          const buildSrc = () => {
+            let iframeFileName = "secure-input";
+
+            if (this.localIframeServerMode) {
+              iframeFileName = `${mode}-iframe.html`;
+            }
+
+            // let src = `${this.iframeHost}/secure-input?key=${this.tokenizingKey}`;
+            let src = `${this.iframeHost}/${iframeFileName}?key=${this.tokenizingKey}`;
+            let optionsStr = "";
+
+            if (options) {
+              // encode options with btoa since this is client side
+              const optionsEncoded = btoa(JSON.stringify(options));
+              optionsStr = "&options=" + optionsEncoded;
+            }
+
+            return `${src}${optionsStr}&origin=${encodeURI(
+              window.location.href
+            )}`;
+          };
+
+          newFrame.setAttribute("src", buildSrc());
+          parentEl.appendChild(newFrame);
+
+          return newFrame;
+        }
+
+        render(numberDivId, cvvDivId, options) {
+          const self = this;
+
+          // deal with the card number div
+          this.inputDiv = numberDivId;
+          this.cvvDiv = cvvDivId;
+          const inputDiv = document.getElementById(numberDivId);
+          const cvvDiv = document.getElementById(cvvDivId);
+
+          const cardFrame = this.buildBasicIframe(
+            "number",
+            inputDiv,
+            this.cardNumberIframeId,
+            {
+              ...options,
+              cardLogo: false,
+              cvv: false,
+              expirationDate: false,
+              cardNumberIframeId: this.cardNumberIframeId,
+              cvvIframeId: this.cardNumberIframeId,
+            }
+          );
+
+          const cvvFrame = this.buildBasicIframe(
+            "cvv",
+            cvvDiv,
+            this.cvvIframeId,
+            {
+              ...options,
+              cardLogo: false,
+              cardNumber: false,
+              expirationDate: false,
+              cardNumberIframeId: this.cardNumberIframeId,
+              cvvIframeId: this.cardNumberIframeId,
+            }
+          );
+
+          if (document.getElementById(numberDivId + "-error")) {
+            var errorDiv = document.getElementById(numberDivId + "-error");
+            errorDiv.style.display = "none";
+          }
+
+          window.addEventListener("message", function (event) {
+            if (event.data["message"]) {
+              switch (event.data["message"]) {
+                case "validate":
+                  let inputDiv = document.getElementById(numberDivId);
+                  let errorDiv = document.getElementById(
+                    self.inputDiv + "-error"
+                  );
+                  if (event.data["valid"]) {
+                    self.valid = true;
+                    inputDiv.style["border-color"] = null;
+                    errorDiv.style.display = "none";
+                  } else {
+                    self.valid = false;
+                    inputDiv.style["border-color"] = "red";
+                    errorDiv.style.display = "block";
+                    errorDiv.innerText = event.data.error;
+                  }
+              }
+            }
+          });
+        }
+
+        tokenize(request) {
+          const self = this;
+          // let url = this.iframeHost;
+          let url = "http://127.0.0.1:9000/";
+
+          const errorDiv = document.getElementById(self.inputDiv + "-error");
+          errorDiv.style.display = "none";
+
+          const promise = new Promise(function (resolve, reject) {
+            try {
+              window.addEventListener("message", function (event) {
+                if (!event.data["message"]) {
+                  console.log("Response: " + JSON.stringify(event));
+                  if (!event.data.success) {
+                    if (document.getElementById(self.inputDiv + "-error")) {
+                      const errorDiv = document.getElementById(
+                        self.inputDiv + "-error"
+                      );
+                      errorDiv.style.display = "block";
+                      errorDiv.innerText = event.data.responseDescription;
+                    }
+                  }
+                  resolve(event);
+                }
+              });
+              request["origin"] = window.location.href;
+              document
+                .getElementById(self.cardNumberIframeId)
+                .contentWindow.postMessage(request, url);
+            } catch (e) {
+              console.error("in catch block");
+              console.error(e);
+            }
+          });
+          return promise;
+        }
       }
+    </script>
+    <script type="text/javascript">
+      let tokenizer;
 
-      function tokenizeSecureInput (e) {
-
+      function saveConfig(e) {
         e.preventDefault();
 
-        tokenizer.setGatewayHost($("#gatewayHost").val());
-        tokenizer.setTestGatewayHost($("#testGatewayHost").val());
+        localStorage.setItem("tokenizingKey", $("#tokenizingKey").val());
+        localStorage.setItem("gatewayHost", $("#gatewayHost").val());
+        localStorage.setItem("testGatewayHost", $("#testGatewayHost").val());
+      }
+
+      function renderForm(e) {
+        tokenizer = new BlockChypTokenizer(
+          $("#tokenizingKey").val(),
+          true,
+          true
+        );
+
+        var options = {
+          cardLogo: $("#rendered-logo").is(":checked"),
+          cardNumber: $("#rendered-pan").is(":checked"),
+          postalCode: $("#rendered-postalcode").is(":checked"),
+          expirationDate: $("#rendered-expiration").is(":checked"),
+          cvv: $("#rendered-cvv").is(":checked"),
+          style: {
+            "#secure-input input": {
+              color: "red",
+              "background-color": "red",
+              border: "3px solid green",
+            },
+          },
+        };
+
+        tokenizer.render("number-form", "cvv-form", options);
+      }
+
+      function tokenizeSecureInput(e) {
+        e.preventDefault();
 
         let req = {
-          test: $("#rendered-test").is(':checked'),
+          test: $("#rendered-test").is(":checked"),
           cardholderName: $("#rendered-cardholder").val(),
           expMonth: $("#expMonth").val(),
           expYear: $("#expYear").val(),
-        }
+        };
 
-        tokenizer.tokenize($("#tokenizingKey").val(), req)
+        tokenizer
+          .tokenize(req)
           .then(function (response) {
-            console.log(JSON.stringify(response.data))
-            alert('Full Input Response: ' + JSON.stringify(response.data));
+            console.log(JSON.stringify(response.data));
+            // alert('Full Input Response: ' + JSON.stringify(response.data));
+            console.info(
+              "Full Input Response: " + JSON.stringify(response.data)
+            );
           })
           .catch(function (error) {
-            alert("Error:", error);
-          })
-
+            // alert("Error:", error);
+            console.error(error);
+          });
       }
 
-      function tokenizeHandsOffForm (e) {
-
+      function tokenizeHandsOffForm(e) {
         e.preventDefault();
-
-        tokenizer.setGatewayHost($("#gatewayHost").val());
-        tokenizer.setTestGatewayHost($("#testGatewayHost").val());
 
         let req = {
           test: true,
@@ -248,25 +532,23 @@
           expYear: $("#handsoff-expYear").val(),
           cvv: $("#handsoff-cvv").val(),
           postalcode: $("#handsoff-postalCode").val(),
-          cardholderName: $("#handsoff-cardholder").val()
-        }
+          cardholderName: $("#handsoff-cardholder").val(),
+        };
 
-        tokenizer.tokenize($("#tokenizingKey").val(), req)
+        tokenizer
+          .tokenize(req)
           .then(function (response) {
-            alert('Hands Off Response: ' + JSON.stringify(response.data));
+            alert("Hands Off Response: " + JSON.stringify(response.data));
           })
           .catch(function (error) {
             alert("Error:", error);
-          })
-
+          });
       }
 
-      $('#tokenizingKey').val(localStorage.getItem('tokenizingKey'));
-      $('#gatewayHost').val(localStorage.getItem('gatewayHost'));
-      $('#testGatewayHost').val(localStorage.getItem('testGatewayHost'));
-
+      $("#tokenizingKey").val(localStorage.getItem("tokenizingKey"));
+      $("#gatewayHost").val(localStorage.getItem("gatewayHost"));
+      $("#testGatewayHost").val(localStorage.getItem("testGatewayHost"));
     </script>
-
 
     <!-- built files will be auto injected -->
   </body>

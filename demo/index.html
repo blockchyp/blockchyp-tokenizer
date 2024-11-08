@@ -282,11 +282,13 @@
 
           // set the portal urls based on devPortalModeEnabled
           if (devPortalModeEnabled) {
-            this.gatewayHost = "https://api.dev.blockchyp.com";
+            // this.gatewayHost = "https://api.dev.blockchyp.com";
+            this.gatewayHost = "http://192.168.42.107:8000"; // Local BlockChyp Server
             if (this.localIframeServerMode) {
               this.testGatewayHost = "./iframes"; // no trailing slash
             } else {
-              this.testGatewayHost = "https://test.dev.blockchyp.com";
+              // this.testGatewayHost = "https://test.dev.blockchyp.com";
+              this.testGatewayHost = "http://192.168.42.107:8000" // Local BlockChyp Server
             }
           } else {
             this.gatewayHost = "https://api.blockchyp.com";
@@ -315,7 +317,7 @@
         }
 
         buildBasicIframe(mode, parentEl, iframeIdToUse, options) {
-          parentEl.setAttribute("style", "margin: 0; padding: 0;");
+          // parentEl.setAttribute("style", "margin: 0; padding: 0;");
 
           const newFrame = document.createElement("iframe");
           newFrame.setAttribute("style", "margin: 0; padding: 0;");
@@ -377,7 +379,7 @@
               cvv: false,
               expirationDate: false,
               cardNumberIframeId: this.cardNumberIframeId,
-              cvvIframeId: this.cardNumberIframeId,
+              cvvIframeId: this.cvvIframeId,
             }
           );
 
@@ -391,13 +393,15 @@
               cardNumber: false,
               expirationDate: false,
               cardNumberIframeId: this.cardNumberIframeId,
-              cvvIframeId: this.cardNumberIframeId,
+              cvvIframeId: this.cvvIframeId,
             }
           );
 
           if (document.getElementById(numberDivId + "-error")) {
             var errorDiv = document.getElementById(numberDivId + "-error");
-            errorDiv.style.display = "none";
+            if (errorDiv) {
+              errorDiv.style.display = "none";
+            }
           }
 
           window.addEventListener("message", function (event) {
@@ -428,21 +432,24 @@
           // let url = this.iframeHost;
           let url = "http://127.0.0.1:9000/";
 
-          const errorDiv = document.getElementById(self.inputDiv + "-error");
-          errorDiv.style.display = "none";
+          console.log("Tokenizing Request: " + JSON.stringify(request));
 
+          // const errorDiv = document.getElementById(self.inputDiv + "-error");
+          // errorDiv.style.display = "none";
+      
           const promise = new Promise(function (resolve, reject) {
             try {
               window.addEventListener("message", function (event) {
                 if (!event.data["message"]) {
-                  console.log("Response: " + JSON.stringify(event));
                   if (!event.data.success) {
                     if (document.getElementById(self.inputDiv + "-error")) {
                       const errorDiv = document.getElementById(
                         self.inputDiv + "-error"
                       );
-                      errorDiv.style.display = "block";
-                      errorDiv.innerText = event.data.responseDescription;
+                      if (errorDiv) {
+                        errorDiv.style.display = "block";
+                        errorDiv.innerText = event.data.responseDescription;
+                      }
                     }
                   }
                   resolve(event);
@@ -452,6 +459,7 @@
               document
                 .getElementById(self.cardNumberIframeId)
                 .contentWindow.postMessage(request, url);
+              console.log("after postMessage");
             } catch (e) {
               console.error("in catch block");
               console.error(e);
@@ -510,6 +518,7 @@
         tokenizer
           .tokenize(req)
           .then(function (response) {
+            console.log('in then block', response);
             console.log(JSON.stringify(response.data));
             // alert('Full Input Response: ' + JSON.stringify(response.data));
             console.info(

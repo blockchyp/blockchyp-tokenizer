@@ -2,16 +2,23 @@
 <html lang="en">
   <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
     <title>BlockChyp | Internal Error</title>
 
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-6jHF7Z3XI3fF4XZixAuSu0gGKrXwoX/w3uFPxC56OtjChio7wtTGJWRW53Nhx6Ev" crossorigin="anonymous">
-    <link rel="stylesheet" href="./number-iframe_files/bootstrap.min.css"/>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.7.0/css/all.css"
+      integrity="sha384-6jHF7Z3XI3fF4XZixAuSu0gGKrXwoX/w3uFPxC56OtjChio7wtTGJWRW53Nhx6Ev"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./number-iframe_files/bootstrap.min.css" />
     <style>
-
       .cardImage {
         max-height: 24px;
       }
@@ -25,7 +32,7 @@
 
       #secure-input .cvvInput {
         margin-left: 3px;
-        width: 70px
+        width: 70px;
       }
 
       #secure-input .dateInput {
@@ -66,16 +73,24 @@
         color: #777;
         font-weight: 700;
       }
-
     </style>
-
   </head>
   <body>
     <div id="secure-input">
-      
       <span class="input-container">
-          <span id="maskedPan" style="display: none;" onclick="setPanEntryMode()">****</span>
-          <input placeholder="CVV Zebra" value="342" id="cvv" class="cvvInput"  maxlength="4" tabindex="2" autocomplete="cc-csc" oninput="handleCvvInput(event)"/>
+        <span id="maskedPan" style="display: none" onclick="setPanEntryMode()"
+          >****</span
+        >
+        <input
+          placeholder="CVV Zebra"
+          value="342"
+          id="cvv"
+          class="cvvInput"
+          maxlength="4"
+          tabindex="2"
+          autocomplete="cc-csc"
+          oninput="handleCvvInput(event)"
+        />
       </span>
     </div>
     <script src="./number-iframe_files/axios.min.js"></script>
@@ -86,12 +101,19 @@
       var formatMode = 'standard';
       var formatLength = 19;
       var cvvLength = 3;
-      var origin = 'http://localhost:9000/';
+      var origin = 'http://127.0.0.1:9000/';
 
-      var cardNumberIframeId = 'number-1234567890'; // '{{.Options.cardNumberIframeId}}'
-      var cvvIframeId = 'cvv-1234567890'; // '{{.Options.cvvIframeId}}'
-
-      window.name = cvvIframeId;
+      var cardNumberIframeID = 'number-TbPapiGeKS' || '';
+      var cvvIframeID = 'cvv-TbPapiGeKS' || '';
+      var cardNumberExists = 'false' === 'true';
+      var cvvExists = 'true' === 'true';
+      if (cardNumberExists && cvvExists) {
+          window.name = 'BlockChypSecureInputWindow';
+      } else if (cardNumberExists && !cvvExists) {
+          window.name = cardNumberIframeID;
+      } else if (!cardNumberExists && cvvExists) {
+          window.name = cvvIframeID;
+      }
 
       function isNumericKey(e) {
         if (e.key === '0') {
@@ -110,21 +132,20 @@
         }
       }
 
-      {{ if .Options.CVV }}
-        window.getCvv = () => {
-          return $('#cvv').val();
-        }
-      {{ end }}
-
+      window.getCvv = () => {
+        return $('#cvv').val();
+      }
+    
       function handleCvvInput(e) {
-        // var cvv = document.getElementById('cvv').value;
-        // console.log('firing', {cvv});
+        let cvv = e.target.value;
 
-        // const numberFrame = window.parent.frames[cardNumberIframeId];
-        // const numberFrame = $(`iframe#cardNumberIframeId`, window.parent.document);
-        // console.log('numberFrame', numberFrame);
+        console.log('firing', {cvv});
 
-        // numberFrame.contentWindow.postMessage('incomingCvv', {cvv})
+        window.parent.postMessage({event: 'newCvvValue', cvv}, window.origin);
+      }
+
+      if (document.getElementById('cvv').value) {
+        window.parent.postMessage({event: 'newCvvValue', cvv: document.getElementById('cvv').value}, window.origin);
       }
 
       function handlePanKey(e) {
@@ -401,7 +422,6 @@
         window.parent.postMessage(validationState, origin);
 
       }
-
     </script>
   </body>
 </html>

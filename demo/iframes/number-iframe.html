@@ -86,12 +86,40 @@
           var formatMode = 'standard';
           var formatLength = 19;
           var cvvLength = 3;
-          var origin = 'http://localhost:9000/';
+          var origin = 'http://127.0.0.1:9000/';
     
-          var cardNumberIframeId = 'number-1234567890'; // '{{.Options.cardNumberIframeId}}'
-          var cvvIframeId = 'cvv-1234567890'; // '{{.Options.cvvIframeId || null }}'
+          var cardNumberIframeID = 'number-TbPapiGeKS' || '';
+          var cvvIframeID = 'cvv-TbPapiGeKS' || '';
+          var cardNumberExists = 'true' === 'true';
+          var cvvExists = 'false' === 'true';
+
+          var currentCvv = '';
+
+          if (cardNumberExists && cvvExists) {
+              window.name = 'BlockChypSecureInputWindow';
+          } else if (cardNumberExists && !cvvExists) {
+              window.name = cardNumberIframeID;
+          } else if (!cardNumberExists && cvvExists) {
+              window.name = cvvIframeID;
+          }
           
-          window.name = cardNumberIframeId;
+          const removeTrailingSlash = (origin) => origin.replace(/\/+$/, '');
+          window.parent.addEventListener("message", (event) => {
+            console.log('got message');
+            // Check the origin to ensure security
+            // Replace window.origin with the specific origin if needed
+            console.log(event.origin, window.origin)
+
+            if (removeTrailingSlash(event.origin) === removeTrailingSlash(window.origin)) {
+              // Check if the event is the one you're looking for
+              if (event.data && event.data.event === 'newCvvValue') {
+                const newCvv = event.data.cvv;
+                console.log("Received new CVV:", newCvv);
+                // Process the new CVV value as needed
+                currentCvv = newCvv;
+              }
+            }
+          });
 
           function isNumericKey(e) {
             if (e.key === '0') {
@@ -335,10 +363,9 @@
             }
           }
     
-          window.addEventListener('incomingCvv', function (event) {
-            console.log('incomingCvv', event.data);
-          });
+          
           window.addEventListener('message', function (event) {
+            console.log('new message', event.data);
             var request = event.data;
     
             if (document.getElementById('pan')) {
@@ -347,18 +374,18 @@
             if (document.getElementById('expDate')) {
               request['expDate'] = document.getElementById('expDate').value;
             }
-            if (cvvIframeId) {
+            if (currentCvv) {
               // here, we know this cvv field was disabled AND we have another iframe for
               // the cvv input, grab that value, put it in request
               // console.log($(`iframe[name=${cvvIframeId}]`));
               // const cvvValue = $(`iframe[id=${cvvIframeId}]`).contents().find('#cvv').val();
-              const cvvValue = window.parent.frames[cvvIframeId].getCvv();
+              // const cvvValue = window.parent.frames[cvvIframeId].getCvv();
               
               // var iframe = document.getElementById(cvvIframeId);
               // var elmnt = iframe.contentWindow.document.getElementsByTagName("H1")[0];
-              request['cvv'] = cvvValue;
+              request['cvv'] = currentCvv;
               
-              console.log('cvvValue2', cvvValue);
+              console.log('currentCvv', currentCvv);
             } else if (document.getElementById('cvv')) {
               request['cvv'] = document.getElementById('cvv').value;
             }

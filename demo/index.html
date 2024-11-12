@@ -202,7 +202,8 @@
           cardNumber: $("#rendered-pan").is(':checked'),
           postalCode: $("#rendered-postalcode").is(':checked'),
           expirationDate: $("#rendered-expiration").is(':checked'),
-          cvv: $("#rendered-cvv").is(':checked')
+          cvv: $("#rendered-cvv").is(':checked'),
+          style: 'width: 90%; height:90%; border-radius: 3px; border: 1px solid red; padding: .5em .5em; font-size: 91%;'
         }
 
         tokenizer.render($("#tokenizingKey").val(), $("#rendered-test").is(':checked'), 'payment-form', options);

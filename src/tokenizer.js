@@ -34,7 +34,13 @@ export class BlockChypTokenizer {
     let self = this
     this.inputDiv = divId
     var inputDiv = document.getElementById(divId)
-    inputDiv.setAttribute('style', 'margin: 0; padding: 0;')
+    console.log('Options: ', options)
+    console.log('Rendering Style: ' + options.style)
+    if (options.style) {
+      inputDiv.setAttribute('style', options.style)
+    } else {
+      inputDiv.setAttribute('style', 'margin: 0; padding: 0;')
+    }
     var bcFrame = document.createElement('iframe')
     bcFrame.setAttribute('style', 'margin: 0; padding: 0;')
     bcFrame.setAttribute('id', 'blockchypSecureInput')

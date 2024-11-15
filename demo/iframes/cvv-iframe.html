@@ -141,7 +141,7 @@
 
         console.log('firing', {cvv});
 
-        window.parent.postMessage({event: 'newCvvValue', cvv}, window.origin);
+        window.parent.postMessage({event: 'newCvvValue', cvv}, window.location.origin);
       }
 
       if (document.getElementById('cvv').value) {

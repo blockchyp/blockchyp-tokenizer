@@ -118,36 +118,6 @@
                       <input type="checkbox" id="rendered-test" checked />
                     </div>
                   </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="rendered-cardholder">Card Logo:</label>
-                      <input type="checkbox" id="rendered-logo" checked />
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="rendered-cardholder">Card Number:</label>
-                      <input type="checkbox" id="rendered-pan" checked />
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="rendered-cardholder">Expiration Date:</label>
-                      <input type="checkbox" id="rendered-expiration" checked />
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="rendered-cardholder">CVV:</label>
-                      <input type="checkbox" id="rendered-cvv" checked />
-                    </div>
-                  </div>
-                  <div class="col-md-3">
-                    <div class="form-group">
-                      <label for="rendered-cardholder">Postal Code:</label>
-                      <input type="checkbox" id="rendered-postalcode" />
-                    </div>
-                  </div>
                 </div>
                 <button
                   type="button"
@@ -275,7 +245,7 @@
           this.cardNumberIframeId = `number-${this.commonId}`;
           this.cvvIframeId = `cvv-${this.commonId}`;
 
-          this.localIframeServerMode = true;
+          this.localIframeServerMode = false;
 
           // this flag is whether or not a merchant is test (sandbox) or live
           this.isTestMode = isTestMode;
@@ -317,7 +287,7 @@
         }
 
         buildBasicIframe(mode, parentEl, iframeIdToUse, options) {
-          // parentEl.setAttribute("style", "margin: 0; padding: 0;");
+          parentEl.setAttribute("style", "margin: 0; padding: 0;");
 
           const newFrame = document.createElement("iframe");
           newFrame.setAttribute("style", "margin: 0; padding: 0;");
@@ -351,6 +321,7 @@
 
             return `${src}${optionsStr}&origin=${encodeURI(
               window.location.href
+              // window.location.origin
             )}`;
           };
 
@@ -380,6 +351,7 @@
               expirationDate: false,
               cardNumberIframeId: this.cardNumberIframeId,
               cvvIframeId: this.cvvIframeId,
+              style: "border: 1px solid red;",
             }
           );
 
@@ -430,12 +402,20 @@
         tokenize(request) {
           const self = this;
           // let url = this.iframeHost;
-          let url = "http://127.0.0.1:9000/";
+          // let url = "http://127.0.0.1:9000/";
+          let url = ''
+          if (request.test) {
+            url = "http://192.168.42.107:8000"
+          } else {
+            url = "http://192.168.42.107:8000"
+          }
 
-          console.log("Tokenizing Request: " + JSON.stringify(request));
-
-          // const errorDiv = document.getElementById(self.inputDiv + "-error");
-          // errorDiv.style.display = "none";
+          // if (document.getElementById(numberDivId + "-error")) {
+          //   var errorDiv = document.getElementById(numberDivId + "-error");
+          //   if (errorDiv) {
+          //     errorDiv.style.display = "none";
+          //   }
+          // }
       
           const promise = new Promise(function (resolve, reject) {
             try {
@@ -455,13 +435,11 @@
                   resolve(event);
                 }
               });
-              request["origin"] = window.location.href;
+              request["origin"] = window.location.origin;
               document
                 .getElementById(self.cardNumberIframeId)
                 .contentWindow.postMessage(request, url);
-              console.log("after postMessage");
             } catch (e) {
-              console.error("in catch block");
               console.error(e);
             }
           });
@@ -487,20 +465,7 @@
           true
         );
 
-        var options = {
-          cardLogo: $("#rendered-logo").is(":checked"),
-          cardNumber: $("#rendered-pan").is(":checked"),
-          postalCode: $("#rendered-postalcode").is(":checked"),
-          expirationDate: $("#rendered-expiration").is(":checked"),
-          cvv: $("#rendered-cvv").is(":checked"),
-          style: {
-            "#secure-input input": {
-              color: "red",
-              "background-color": "red",
-              border: "3px solid green",
-            },
-          },
-        };
+        var options = {};
 
         tokenizer.render("number-form", "cvv-form", options);
       }
@@ -518,16 +483,14 @@
         tokenizer
           .tokenize(req)
           .then(function (response) {
-            console.log('in then block', response);
-            console.log(JSON.stringify(response.data));
             // alert('Full Input Response: ' + JSON.stringify(response.data));
             console.info(
               "Full Input Response: " + JSON.stringify(response.data)
             );
           })
           .catch(function (error) {
-            // alert("Error:", error);
-            console.error(error);
+            alert("Error:", error);
+            // console.error(error);
           });
       }
 

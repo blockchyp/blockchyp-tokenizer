@@ -83,6 +83,11 @@
                   <label for="handsoff.pan">Card Number</label>
                   <div id="number-form" class="form-control"></div>
                   <div id="cvv-form" class="form-control"></div>
+                  <script type="text/javascript">
+                    document.addEventListener("DOMContentLoaded", function () {
+                      renderForm();
+                    });
+                  </script>
                   <div
                     id="number-form-error"
                     class="alert alert-danger"
@@ -233,7 +238,7 @@
         constructor(
           tokenizingKey,
           isTestMode = false,
-          devPortalModeEnabled = false
+          devPortalModeEnabled = true
         ) {
           this.defaultTimeout = 60;
           this.inputDiv = null;
@@ -252,34 +257,35 @@
 
           // set the portal urls based on devPortalModeEnabled
           if (devPortalModeEnabled) {
-            // this.gatewayHost = "https://api.dev.blockchyp.com";
-            this.gatewayHost = "http://192.168.42.107:8000"; // Local BlockChyp Server
+            this.gatewayHost = "https://api.dev.blockchyp.com";
+            // this.gatewayHost = "http://192.168.42.107:8000"; // Local BlockChyp Server
             if (this.localIframeServerMode) {
               this.testGatewayHost = "./iframes"; // no trailing slash
             } else {
-              // this.testGatewayHost = "https://test.dev.blockchyp.com";
-              this.testGatewayHost = "http://192.168.42.107:8000" // Local BlockChyp Server
+              this.testGatewayHost = "https://test.dev.blockchyp.com";
+              // this.testGatewayHost = "http://192.168.42.107:8000" // Local BlockChyp Server
             }
           } else {
             this.gatewayHost = "https://api.blockchyp.com";
             this.testGatewayHost = "https://test.blockchyp.com";
           }
 
-          this.iframeHost = isTestMode
+          this.iframeHost = this.isTestMode
             ? this.testGatewayHost
-            : this.gatewayHost;
+            : this.gatewayHost;  
+       
         }
 
         static generateRandomAlphaString(length = 10) {
-          // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-          // let result = '';
-          // for (let i = 0; i < length; i++) {
-          //   result += characters.charAt(
-          //     Math.floor(Math.random() * characters.length),
-          //   );
-          // }
-          // return result;
-          return "123456789";
+          const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+          let result = '';
+          for (let i = 0; i < length; i++) {
+            result += characters.charAt(
+              Math.floor(Math.random() * characters.length),
+            );
+          }
+          return result;
+          // return "123456789";
         }
 
         isValid() {
@@ -287,10 +293,20 @@
         }
 
         buildBasicIframe(mode, parentEl, iframeIdToUse, options) {
-          parentEl.setAttribute("style", "margin: 0; padding: 0;");
+          // parentEl.setAttribute("style", "margin: 0; padding: 0;");
+          if (options.style) {
+            parentEl.setAttribute("style", options.style);
+          } else {
+            parentEl.setAttribute("style", "margin: 0; padding: 0;");
+          }
 
           const newFrame = document.createElement("iframe");
           newFrame.setAttribute("style", "margin: 0; padding: 0;");
+          // if (options.style) {
+          //   newFrame.setAttribute('style', options.style)
+          // } else {
+          //   newFrame.setAttribute('style', 'margin: 0; padding: 0;')
+          // }
           newFrame.setAttribute("id", iframeIdToUse);
           newFrame.setAttribute("name", iframeIdToUse);
           newFrame.setAttribute("frameBorder", "0");
@@ -320,8 +336,8 @@
             }
 
             return `${src}${optionsStr}&origin=${encodeURI(
-              window.location.href
-              // window.location.origin
+              // window.location.href
+              window.location.origin
             )}`;
           };
 
@@ -351,7 +367,8 @@
               expirationDate: false,
               cardNumberIframeId: this.cardNumberIframeId,
               cvvIframeId: this.cvvIframeId,
-              style: "border: 1px solid red;",
+              logging: true
+              // style: 'width: 90%; height:90%; border-radius: 3px; border: 5px solid green; padding: 1em 1em; font-size: 50%;'
             }
           );
 
@@ -366,6 +383,7 @@
               expirationDate: false,
               cardNumberIframeId: this.cardNumberIframeId,
               cvvIframeId: this.cvvIframeId,
+              // style: "border: 2px solid orange;"
             }
           );
 
@@ -400,14 +418,17 @@
         }
 
         tokenize(request) {
+          console.log("inside the tokenize function", request);
           const self = this;
           // let url = this.iframeHost;
           // let url = "http://127.0.0.1:9000/";
           let url = ''
           if (request.test) {
-            url = "http://192.168.42.107:8000"
+            // url = "http://192.168.42.107:8000"
+            url = "https://test.dev.blockchyp.com";
           } else {
-            url = "http://192.168.42.107:8000"
+            // url = "http://192.168.42.107:8000"
+            url = "https://api.dev.blockchyp.com";
           }
 
           // if (document.getElementById(numberDivId + "-error")) {
@@ -420,6 +441,7 @@
           const promise = new Promise(function (resolve, reject) {
             try {
               window.addEventListener("message", function (event) {
+                console.log("inside the message event listener");
                 if (!event.data["message"]) {
                   if (!event.data.success) {
                     if (document.getElementById(self.inputDiv + "-error")) {
@@ -439,6 +461,8 @@
               document
                 .getElementById(self.cardNumberIframeId)
                 .contentWindow.postMessage(request, url);
+              console.log('request: ', request);
+              console.log('message posted to: ', url);
             } catch (e) {
               console.error(e);
             }
@@ -465,7 +489,8 @@
           true
         );
 
-        var options = {};
+        var options = {
+        };
 
         tokenizer.render("number-form", "cvv-form", options);
       }
@@ -483,10 +508,10 @@
         tokenizer
           .tokenize(req)
           .then(function (response) {
-            // alert('Full Input Response: ' + JSON.stringify(response.data));
-            console.info(
-              "Full Input Response: " + JSON.stringify(response.data)
-            );
+            alert('Full Input Response: ' + JSON.stringify(response.data));
+            // console.info(
+            //   "Full Input Response: " + JSON.stringify(response.data)
+            // );
           })
           .catch(function (error) {
             alert("Error:", error);

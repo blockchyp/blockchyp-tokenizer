@@ -252,53 +252,69 @@ isn't a complete solution.  Some of you will need more fine grained control over
 your input rendering.
 
 The options object has a style property for use in situations where custom
-CSS is necessary.  Custom CSS is passed into the options object as a Javascript
-map as shown in the example below.  This example includes most of the default
+CSS is necessary.  Custom CSS is passed into the options object as a string
+as shown in the example below.  This example includes most of the default
 CSS for Bootstrap 4 which can be tweaked for custom scenarios.
 
 ```
   var options = {
     framework: 'none',
-    style: {
-      '#secure-input': {
-        'font-size': '14pt',
-        'min-width': '345px'
-      },
-      '#secure-input input': {
-        'border': '0',
-        'font-size': '14pt'
-      },
-      '#secure-input input:focus': {
-        'outline-width': '0'
-      },
-      '#secure-input .panInput': {
-        'margin-left': '3px',
-        'margin-right': '3px',
-        'min-width': '140px'
-      },
-      '#secure-input .dateInput': {
-        'width': '35px'
-      },
-      '#secure-input .cvvInput': {
-        'width': '40px',
-        'margin-left': '3px'
-      },
-      '#secure-input .postalCodeInput': {
-        'width': '100px',
-        'margin-left': '3px'
-      },
-      '.placeholderText': {
-        'font-weight': 'bold',
-        'color': '#777777'
-      },
-      '.cardIcon': {
-        'color': '#777777',
-        'font-size': '18pt'
-      },
-      '#cardImage': {
-        'max-height': '24px'
+    style: `
+      .cardImage {
+        max-height: 24px;
       }
-    }
+
+      #secure-input {
+        white-space: nowrap;
+        margin-left: 2px;
+        margin-top: 5px;
+        font-size: 14pt;
+      }
+
+      #secure-input .cvvInput {
+        margin-left: 3px;
+        width: 70px;
+      }
+
+      #secure-input .dateInput {
+        width: 100px;
+      }
+
+      #secure-input .panInput {
+        margin-left: 3px;
+        margin-right: 3px;
+      }
+
+      #secure-input .postalCodeInput {
+        margin-left: 3px;
+        width: 100px;
+      }
+
+      #secure-input input {
+        border: 0;
+        font-size: 12pt;
+      }
+
+      #secure-input input:focus {
+        outline-width: 0;
+        outline: none;
+      }
+
+      #maskedPan {
+        font-size: 12pt;
+        margin-right: 20px;
+      }
+
+      .body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .placeholderText {
+        color: #777;
+        font-weight: 700;
+      }
+    `
   }
 
   tokenizer.render('<TOKENIZING_KEY>', true, 'secure-input', options);

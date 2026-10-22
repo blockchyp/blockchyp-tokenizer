@@ -99,7 +99,7 @@ export class BlockChypTokenizer {
     if (document.getElementById('blockchypSecureInput')) {
       var errorDiv = document.getElementById(self.inputDiv + '-error')
       errorDiv.style.display = 'none'
-      var promise = new Promise(function (resolve, reject) {
+      var promise = new Promise(function (resolve) {
         window.addEventListener('message', function (event) {
           if (!event.data['message']) {
             console.log('Response: ' + JSON.stringify(event))

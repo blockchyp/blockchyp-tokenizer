@@ -4,8 +4,8 @@
   "description": "BlockChyp Tokenizer",
   "main": "tokenizer.js",
   "scripts": {
-    "build": "esbuild src/tokenizer.js --bundle --format=cjs --platform=browser --packages=external --target=es2017 --outfile=dist/tokenizer.js",
-    "prod": "npm run build && esbuild src/global.js --bundle --format=iife --platform=browser --target=es2017 --outfile=dist/blockchyp-tokenizer-all.js && esbuild src/global.js --bundle --format=iife --platform=browser --target=es2017 --minify --outfile=dist/blockchyp-tokenizer-all.min.js",
+    "build": "rollup -c",
+    "prod": "npm run build",
     "lint": "eslint src",
     "test": "npm run build && jasmine --config=itest/support/jasmine.json",
     "dev": "http-server . -p 9000 -c-1",
@@ -33,14 +33,22 @@
   },
   "homepage": "https://github.com/blockchyp/blockchyp-tokenizer#readme",
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-runtime": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
     "@eslint/js": "^9.39.0",
-    "esbuild": "^0.28.2",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^28.0.9",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^1.0.2",
     "eslint": "^9.39.0",
     "globals": "^16.0.0",
     "http-server": "^14.1.1",
-    "jasmine": "^5.13.0"
+    "jasmine": "^5.13.0",
+    "rollup": "^4.65.0"
   },
   "dependencies": {
+    "@babel/runtime": "^7.29.10",
     "axios": "^1.20.0",
     "js-base64": "^3.7.8"
   },

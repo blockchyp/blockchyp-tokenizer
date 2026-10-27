@@ -36,8 +36,7 @@ describe("TokenizerTest", function() {
         done()
       })
       .catch(function (error) {
-        console.log("Error:", error)
-        done()
+        done.fail(error)
       })
   });
 
